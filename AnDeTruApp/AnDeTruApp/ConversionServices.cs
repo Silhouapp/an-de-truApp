@@ -27,23 +27,9 @@ namespace AnDeTruApp
             Texture2D texture = Texture2D.FromStream(
                 GraphicsDevice, memoryStream);
 
-            //memoryStream.Dispose();
+            memoryStream.Dispose();
 
             return texture;
-        }
-
-        public static Texture2D BitmapToTexture2D2(GraphicsDevice GraphicsDevice,
-                                                   Bitmap image)
-        {
-            Texture2D tx = null;
-            using (MemoryStream s = new MemoryStream())
-            {
-                image.Save(s, System.Drawing.Imaging.ImageFormat.Png);
-                s.Seek(0, SeekOrigin.Begin); //must do this, or error is thrown in next line
-                tx = Texture2D.FromStream(GraphicsDevice, s);
-            }
-
-            return tx;
         }
     }
 }
