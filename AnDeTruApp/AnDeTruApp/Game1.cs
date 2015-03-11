@@ -77,6 +77,11 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (Keyboard.GetState(PlayerIndex.One).IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+
             // Camera update needs to be closest to base.Update
             this._camera.Update();
 
