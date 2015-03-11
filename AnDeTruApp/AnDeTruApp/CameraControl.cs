@@ -11,9 +11,17 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Drawing;
 using System.Diagnostics;
+using AnDeTruSprites;
 
 namespace AnDeTruApp
 {
+
+    public class GestureEventArgs : EventArgs
+    {
+        public Gesture Gesture { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
     public class CameraControl
     {
         private Size captureSize = new Size(848, 480);
@@ -22,12 +30,15 @@ namespace AnDeTruApp
         public Texture2D SpriteTexture { get; set; }
         public System.Drawing.Bitmap SpriteBitmap { get; set; }
         public PXCMSenseManager SenseManager { get; set; }
+
         public PXCMHandModule hand  { get; set; }
 
         public System.Drawing.Point HandLocation;
             
         private GraphicsDevice _gd;
         PXCMHandData handData;
+
+        public event EventHandler<GestureEventArgs> GestureCapturedHandler;
 
         public CameraControl(GraphicsDevice d)
         {
@@ -37,13 +48,12 @@ namespace AnDeTruApp
             // Create new manager
             this.SenseManager = PXCMSenseManager.CreateInstance();
             this.HandLocation = new System.Drawing.Point();
-            
             // Enable stream
             this.SenseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, captureSize.Width, captureSize.Height, 60);
 
             //Enable Hand
             SenseManager.EnableHand();//D
-            
+
             // Create to sprite bitemap for copy
             this.SpriteBitmap = new System.Drawing.Bitmap(captureSize.Width, captureSize.Height);
 
@@ -102,6 +112,12 @@ namespace AnDeTruApp
                 //iScissor++;
             }
 
+            EventHandler<GestureEventArgs> handler = GestureCapturedHandler;
+            if (handler != null)
+            {
+                handler(this, new GestureEventArgs() { Gesture = new Rock(), X = 1, Y = 1 });
+            }
+
         }
 
         private pxcmStatus onProcessedFrame(int mid, PXCMBase module, PXCMCapture.Sample sample)
@@ -110,14 +126,14 @@ namespace AnDeTruApp
             {
                 handData.Update();
             }
-            
+
             // return NO ERROR to continue, or any ERROR to exit the loop
             return pxcmStatus.PXCM_STATUS_NO_ERROR;
         }
 
         pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
         {
-            
+
             // work on sample.color
             PXCMImage.ImageData data;
             pxcmStatus stt = sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ,

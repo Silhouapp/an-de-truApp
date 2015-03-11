@@ -31,6 +31,7 @@ namespace AnDeTruSprites
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            timer.Interval = new Random().Next(1000, 5000);
             this.addGestureView();
         }
 
@@ -65,19 +66,21 @@ namespace AnDeTruSprites
         {
             bool result = false;
             GestureView gestureView = this.gestures[position.OneDimensional];
-            Gesture gestureStored = this.gestures[position.OneDimensional].Gesture;
-            if (gestureView == null)
+            if (gestureView != null)
             {
-            }
-            if (gestureStored == null || gesture < gestureStored)
-            {
-                result = false;
-                this.Score--;
-            }
-            else
-            {
-                result = true;
-                this.Score++;
+                Gesture gestureStored = this.gestures[position.OneDimensional].Gesture;
+
+                if (gestureStored == null || gesture < gestureStored)
+                {
+                    result = false;
+                    this.Score--;
+                }
+                else
+                {
+                    result = true;
+                    this.Score++;
+                    this.gestures[position.OneDimensional] = null;
+                }
             }
 
             return result;

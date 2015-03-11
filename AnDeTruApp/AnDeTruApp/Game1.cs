@@ -28,7 +28,7 @@ namespace AnDeTruApp
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             
-            # if RELEASE
+            # if !DEBUG
             this.graphics.IsFullScreen = true;
             #endif
         }
@@ -43,8 +43,14 @@ namespace AnDeTruApp
         {
             this._camera = new CameraControl(GraphicsDevice);
             this._board = new GameBoard();
+            this._camera.GestureCapturedHandler += _camera_GestureCapturedHandler;
 
             base.Initialize();
+        }
+
+        void _camera_GestureCapturedHandler(object sender, GestureEventArgs e)
+        {
+            this._board.throwGesture(e.Gesture, new AnDeTruSprites.Point() { X = e.X, Y = e.Y });
         }
 
         /// <summary>
