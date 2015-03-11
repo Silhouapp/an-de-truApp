@@ -85,7 +85,6 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
             // Must be the first method to be called.
             this.DrawBackground();
 
