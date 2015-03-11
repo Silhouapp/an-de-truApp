@@ -88,6 +88,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AnDeTruSprites\AnDeTruSprites.csproj">
+      <Project>{cca8a39e-0073-4a6b-94b2-6282746f0259}</Project>
+      <Name>AnDeTruSprites</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AnDeTruAppContent\AnDeTruAppContent.contentproj">
       <Name>AnDeTruAppContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
