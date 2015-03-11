@@ -29,7 +29,7 @@ namespace AnDeTruApp
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            this.graphics.IsFullScreen = true;
+            //this.graphics.IsFullScreen = true;
         }
 
         /// <summary>
@@ -97,6 +97,8 @@ namespace AnDeTruApp
             // Must be the first method to be called.
             this.DrawBackground();
 
+            EmphesizeSquareByNumber(4, Color.Red);
+
             base.Draw(gameTime);
         }
 
@@ -147,5 +149,33 @@ namespace AnDeTruApp
             }
         }
 
+        /// <summary>
+        /// Emphesize a specific square on the screen
+        /// </summary>
+        /// <param name="squareId">a number from 0 - 8</param>
+        private void EmphesizeSquareByNumber(int squareId, Color color)
+        {
+            if (squareId != -1)
+            {
+                color.A = 60;
+
+                int row = squareId / 3;
+                int col = squareId % 3;
+
+                int height = GraphicsDevice.PresentationParameters.Bounds.Height / 3 - 2;
+                int width = GraphicsDevice.PresentationParameters.Bounds.Width / 3 - 2;
+
+                int offsetX = col * width;
+                int offsetY = row * height;
+
+                Texture2D texture1px = new Texture2D(graphics.GraphicsDevice, 1, 1);
+                texture1px.SetData(new Color[] { Color.White });
+
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
+                Rectangle rectangle = new Rectangle(offsetX + 4, offsetY + 4, width, height);
+                spriteBatch.Draw(texture1px, rectangle, color);
+                spriteBatch.End();
+            }
+        }
     }
 }
