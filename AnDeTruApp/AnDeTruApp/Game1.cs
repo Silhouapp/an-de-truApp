@@ -24,6 +24,12 @@ namespace AnDeTruApp
         SpriteBatch spriteBatch;
         PXCMSenseManager sm;
 
+        private AnimatedSprite animatedSprite;
+
+
+        // Store some information about the sprite's motion.
+        Vector2 spriteSpeed = new Vector2(50.0f, 50.0f);
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -65,6 +71,8 @@ namespace AnDeTruApp
 
             handler.onNewSample = OnNewSample;
             sm.Init(handler);
+		    Texture2D texture = Content.Load<Texture2D>("Paper2048");
+            animatedSprite = new AnimatedSprite(texture, 2, 2, 5);
 
         }
 
@@ -103,9 +111,8 @@ namespace AnDeTruApp
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
             sm.AcquireFrame(false);
-            
+            animatedSprite.Update();
 
             base.Update(gameTime);
         }
@@ -118,20 +125,27 @@ namespace AnDeTruApp
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+
+            animatedSprite.Draw(spriteBatch, Vector2.Zero);
+
             // TODO: Add your drawing code here
             if (this.spriteTexture != null)
             {
                 this.spriteRect.Height = GraphicsDevice.PresentationParameters.Bounds.Height;
                 this.spriteRect.Width = GraphicsDevice.PresentationParameters.Bounds.Width;
 
-                spriteBatch.Begin();
+                
                 spriteBatch.Draw(this.spriteTexture, this.spriteRect, Color.White);
-                spriteBatch.End();
             }
 
             sm.ReleaseFrame();
+            
+            spriteBatch.End();
 
             base.Draw(gameTime);
+
         }
     }
 }
