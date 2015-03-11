@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using AForge.Video;
+using System.Diagnostics;
 
 namespace AnDeTruApp
 {
@@ -56,6 +57,7 @@ namespace AnDeTruApp
             // Create a SenseManager instance
             sm = PXCMSenseManager.CreateInstance();
 
+          
             // Enable depth stream at 320x240x60fps
             sm.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 320, 240, 60);
             this.bmpSprite = new System.Drawing.Bitmap(320, 240);
@@ -65,6 +67,7 @@ namespace AnDeTruApp
 
             handler.onNewSample = OnNewSample;
             sm.Init(handler);
+
         }
 
         pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
@@ -103,6 +106,8 @@ namespace AnDeTruApp
                 this.Exit();
 
             // TODO: Add your update logic here
+            sm.AcquireFrame(false);
+            sm.ReleaseFrame();
 
             base.Update(gameTime);
         }
@@ -114,9 +119,6 @@ namespace AnDeTruApp
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            sm.AcquireFrame(true);
-            sm.ReleaseFrame();
 
             // TODO: Add your drawing code here
             if (this.spriteTexture != null)

@@ -27,6 +27,8 @@ namespace AnDeTruApp
             Texture2D texture = Texture2D.FromStream(
                 GraphicsDevice, memoryStream);
 
+            //memoryStream.Dispose();
+
             return texture;
         }
 
