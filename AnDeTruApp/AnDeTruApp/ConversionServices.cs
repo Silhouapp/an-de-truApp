@@ -21,6 +21,7 @@ namespace AnDeTruApp
             // we don't have to save and read file  
             System.IO.MemoryStream memoryStream =
                 new System.IO.MemoryStream(bufferSize);
+            image.RotateFlip(RotateFlipType.RotateNoneFlipX);
             image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
 
             // Creates a texture from IO.Stream - our memory stream  
