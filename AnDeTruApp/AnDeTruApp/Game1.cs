@@ -94,12 +94,8 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-
             // Must be the first method to be called.
             this.DrawBackground();
-
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -107,7 +103,6 @@ namespace AnDeTruApp
         /// </summary>
         private void DrawBackground()
         {
-
             // make sure not to die if null
             if (this._camera.SpriteTexture != null)
             {
@@ -115,15 +110,42 @@ namespace AnDeTruApp
                 this._camera.SpriteRectangle.Width = GraphicsDevice.PresentationParameters.Bounds.Width;
 
 
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
                 spriteBatch.Draw(this._camera.SpriteTexture, this._camera.SpriteRectangle, Color.White);
+                spriteBatch.End();
             }
 
-            // Can add other shit here....
-
-
+            // Drawing lines
+            this.InitializeBackgroundTexture();
+            
             // this line needs to be last of method
             this._camera.Draw();
-
         }
+
+        private void InitializeBackgroundTexture()
+        {
+            if (this._camera.SpriteTexture == null) return;
+
+            int cols = 3;
+            int rows = 3;
+
+            int height = GraphicsDevice.PresentationParameters.Bounds.Height;
+            int width = GraphicsDevice.PresentationParameters.Bounds.Width;
+
+            Texture2D texture1px = new Texture2D(graphics.GraphicsDevice, 1, 1);
+            texture1px.SetData(new Color[] { Color.White });
+
+            for (float x = 0; x < cols - 1; x++)
+            {
+                Rectangle rectangleX = new Rectangle((int)((width / 3) * (x + 1)), 0, 3, height);
+                Rectangle rectangleY = new Rectangle(0, (int)((height / 3) * (x + 1)), width, 3);
+
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
+                spriteBatch.Draw(texture1px, rectangleX, Color.White);
+                spriteBatch.Draw(texture1px, rectangleY, Color.White);
+                spriteBatch.End();
+            }
+        }
+
     }
 }
