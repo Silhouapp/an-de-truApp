@@ -18,11 +18,8 @@ namespace AnDeTruApp
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        Texture2D spriteTexture;
-        Rectangle spriteRect;
-        System.Drawing.Bitmap bmpSprite;
+        CameraControl _camera;
         SpriteBatch spriteBatch;
-        PXCMSenseManager sm;
 
         public Game1()
         {
@@ -38,7 +35,7 @@ namespace AnDeTruApp
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            this._camera = new CameraControl(GraphicsDevice);
 
             base.Initialize();
         }
@@ -51,35 +48,6 @@ namespace AnDeTruApp
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // Create a SenseManager instance
-            sm = PXCMSenseManager.CreateInstance();
-
-          
-            // Enable depth stream at 320x240x60fps
-            sm.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 320, 240, 60);
-            this.bmpSprite = new System.Drawing.Bitmap(320, 240);
-
-            // Initialize my event handler
-            PXCMSenseManager.Handler handler = new PXCMSenseManager.Handler();
-
-            handler.onNewSample = OnNewSample;
-            sm.Init(handler);
-
-        }
-
-        pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
-        {
-            // work on sample.color
-            PXCMImage.ImageData data;
-            pxcmStatus stt = sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ, PXCMImage.PixelFormat.PIXEL_FORMAT_RGB32, out data);
-            this.bmpSprite = data.ToBitmap(0, this.bmpSprite);
-            sample.color.ReleaseAccess(data);
-            this.spriteTexture = ConversionServices.BitmapToTexture2D(GraphicsDevice, this.bmpSprite);
-
-            // return NO ERROR to continue, or any ERROR to exit the loop
-
-            return pxcmStatus.PXCM_STATUS_NO_ERROR;
         }
 
         /// <summary>
@@ -89,7 +57,7 @@ namespace AnDeTruApp
         protected override void UnloadContent()
         {
             // Clean up
-            sm.Dispose();
+            this._camera.UnloadContent();
         }
 
         /// <summary>
@@ -103,10 +71,8 @@ namespace AnDeTruApp
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
-            sm.AcquireFrame(false);
-            
-
+            // Camera update needs to be closest to base.Update
+            this._camera.Update();
             base.Update(gameTime);
         }
 
@@ -116,22 +82,33 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            // Must be the first method to be called.
+            this.DrawBackground();
 
-            // TODO: Add your drawing code here
-            if (this.spriteTexture != null)
+            base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// Method for drawing the game background.. can add other lines and shit.
+        /// </summary>
+        private void DrawBackground()
+        {
+            // make sure not to die if null
+            if (this._camera.SpriteTexture != null)
             {
-                this.spriteRect.Height = GraphicsDevice.PresentationParameters.Bounds.Height;
-                this.spriteRect.Width = GraphicsDevice.PresentationParameters.Bounds.Width;
+                this._camera.SpriteRectangle.Height = GraphicsDevice.PresentationParameters.Bounds.Height;
+                this._camera.SpriteRectangle.Width = GraphicsDevice.PresentationParameters.Bounds.Width;
 
                 spriteBatch.Begin();
-                spriteBatch.Draw(this.spriteTexture, this.spriteRect, Color.White);
+                spriteBatch.Draw(this._camera.SpriteTexture, this._camera.SpriteRectangle, Color.White);
                 spriteBatch.End();
             }
 
-            sm.ReleaseFrame();
+            // Can add other shit here....
 
-            base.Draw(gameTime);
+
+            // this line needs to be last of method
+            this._camera.Draw();
         }
     }
 }
