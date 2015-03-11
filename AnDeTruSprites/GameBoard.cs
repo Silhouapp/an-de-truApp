@@ -34,6 +34,14 @@ namespace AnDeTruSprites
             this.addGestureView();
         }
 
+        public void Update()
+        {
+            foreach (GestureView gestureView in this.CurrentGestureViews)
+            {
+                gestureView.Sprite.Update();
+            }
+        }
+
         public void addGestureView()
         {
             int gesturePlace = this.getRandomGesturePlace();
