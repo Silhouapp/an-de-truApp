@@ -30,8 +30,11 @@ namespace AnDeTruApp
         public Texture2D SpriteTexture { get; set; }
         public System.Drawing.Bitmap SpriteBitmap { get; set; }
         public PXCMSenseManager SenseManager { get; set; }
-        public PXCMHandModule hand { get; set; }
 
+        public PXCMHandModule hand  { get; set; }
+
+        public System.Drawing.Point HandLocation;
+            
         private GraphicsDevice _gd;
         PXCMHandData handData;
 
@@ -44,7 +47,7 @@ namespace AnDeTruApp
 
             // Create new manager
             this.SenseManager = PXCMSenseManager.CreateInstance();
-
+            this.HandLocation = new System.Drawing.Point();
             // Enable stream
             this.SenseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, captureSize.Width, captureSize.Height, 60);
 
@@ -88,6 +91,8 @@ namespace AnDeTruApp
                         IHandData.QueryTrackedJoint((PXCMHandData.JointType)1, out jointData);
                         nodes[i][1] = jointData;
                         Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
+                        this.HandLocation.X = (int)nodes[i][1].positionImage.x;
+                        this.HandLocation.Y = (int)nodes[i][1].positionImage.y;
                     }
                 }
             }
