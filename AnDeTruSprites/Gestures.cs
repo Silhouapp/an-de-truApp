@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,24 +11,24 @@ namespace AnDeTruSprites
     public static class Gestures
     {
         private static Gesture[] availableGestures;
-        private static Dictionary<Gesture, Texture2D> gestures = new Dictionary<Gesture, Texture2D>();
+        private static Dictionary<Gesture, SpriteViewDetail> gestures = new Dictionary<Gesture, SpriteViewDetail>();
 
         public static Gesture randomGesture()
         {
             return AvailableGestures[new Random().Next(0, AvailableGestures.Count - 1)];
         }
 
-        public static Dictionary<Gesture, Texture2D> loadGestures(params KeyValuePair<Gesture, Texture2D>[] gestureTextureKeyValuePairs)
+        public static Dictionary<Gesture, SpriteViewDetail> loadGestures(params KeyValuePair<Gesture, SpriteViewDetail>[] gestureTextureKeyValuePairs)
         {
-            foreach (KeyValuePair<Gesture, Texture2D> gestureTextureKeyValuePair in gestureTextureKeyValuePairs)
+            foreach (KeyValuePair<Gesture, SpriteViewDetail> gestureTextureKeyValuePair in gestureTextureKeyValuePairs)
             {
                 Gesture gesture = gestureTextureKeyValuePair.Key;
-                Texture2D texture = gestureTextureKeyValuePair.Value;
-                if (gesture == null || texture == null)
+                SpriteViewDetail svd = gestureTextureKeyValuePair.Value;
+                if (gesture == null || svd == null)
                 {
                     throw new Exception("Make sure the format is Gesture, Texture pair. without fucking nulls.");
                 }
-                gestures.Add(gesture, texture);
+                gestures.Add(gesture, svd);
             }
             return gestures;
         }
@@ -42,6 +43,24 @@ namespace AnDeTruSprites
                 g.Add(new Paper());
                 return g;
             }
+        }
+
+        public static void InitGestures(ContentManager cm)
+        {
+            Gestures.loadGestures(
+                new KeyValuePair<Gesture, SpriteViewDetail>(
+                    new Paper(), 
+                    new SpriteViewDetail{
+                        Texture = cm.Load<Texture2D>("Paper2048"),
+                        Rows = 2,
+                        Cols = 2
+                    }
+            ));
+        }
+
+        internal static SpriteViewDetail DetailsFor(Gesture gesture)
+        {
+            return gestures[gesture];
         }
     }
 }

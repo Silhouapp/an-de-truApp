@@ -8,6 +8,8 @@ namespace AnDeTruSprites
     public class GestureView
     {
         public Gesture Gesture { get; set; }
-        public Gesture Point { get; set; }
+        public Point Point { get; set; }
+
+        public AnimatedSprite Sprite { get; set; }
     }
 }

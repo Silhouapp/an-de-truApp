@@ -21,15 +21,15 @@ namespace AnDeTruApp
         GraphicsDeviceManager graphics;
         CameraControl _camera;
         SpriteBatch spriteBatch;
-
-        // Store some information about the sprite's motion.
-        Vector2 spriteSpeed = new Vector2(50.0f, 50.0f);
+        GameBoard _board;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+# if RELEASE
             this.graphics.IsFullScreen = true;
+#endif
         }
 
         /// <summary>
@@ -41,6 +41,7 @@ namespace AnDeTruApp
         protected override void Initialize()
         {
             this._camera = new CameraControl(GraphicsDevice);
+            this._board = new GameBoard();
 
             base.Initialize();
         }
@@ -54,9 +55,7 @@ namespace AnDeTruApp
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Gestures.loadGestures(
-                new KeyValuePair<Gesture, Texture2D>(new Paper(), this.Content.Load<Texture2D>("Paper2048"))
-            );
+            Gestures.InitGestures(this.Content);
         }
 
 
@@ -84,6 +83,7 @@ namespace AnDeTruApp
 
             // Camera update needs to be closest to base.Update
             this._camera.Update();
+            //this._board.throwGesture(new Rock(), new AnDeTruSprites.Point { X = 1, Y = 1 });
 
             base.Update(gameTime);
         }
@@ -96,8 +96,18 @@ namespace AnDeTruApp
         {
             // Must be the first method to be called.
             this.DrawBackground();
+            this.DrawGestures();
 
             base.Draw(gameTime);
+        }
+
+        private void DrawGestures()
+        {
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
+            //this._board.CurrentGestureViews.ForEach(g => spriteBatch.Draw(g.Sprite.Texture, g.Sprite.destRect, g.Sprite.sourceRect, Color.Transparent));
+            //this._board.CurrentGestureViews.ForEach()   
+
+            spriteBatch.End();
         }
 
         /// </summary>
@@ -127,7 +137,6 @@ namespace AnDeTruApp
             if (this._camera.SpriteTexture == null) return;
 
             int cols = 3;
-            int rows = 3;
 
             int height = GraphicsDevice.PresentationParameters.Bounds.Height;
             int width = GraphicsDevice.PresentationParameters.Bounds.Width;
@@ -135,16 +144,19 @@ namespace AnDeTruApp
             Texture2D texture1px = new Texture2D(graphics.GraphicsDevice, 1, 1);
             texture1px.SetData(new Color[] { Color.White });
 
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
+
             for (float x = 0; x < cols - 1; x++)
             {
                 Rectangle rectangleX = new Rectangle((int)((width / 3) * (x + 1)), 0, 3, height);
                 Rectangle rectangleY = new Rectangle(0, (int)((height / 3) * (x + 1)), width, 3);
 
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
                 spriteBatch.Draw(texture1px, rectangleX, Color.White);
                 spriteBatch.Draw(texture1px, rectangleY, Color.White);
-                spriteBatch.End();
             }
+
+            spriteBatch.End();
+
         }
 
     }
