@@ -81,26 +81,23 @@ namespace AnDeTruApp
             // Initialize my event handler
             PXCMSenseManager.Handler handler = new PXCMSenseManager.Handler();
 
-            //handler.onNewSample = OnNewSample;
+            handler.onNewSample = OnNewSample;
             sm.Init(handler);
 
             // Stream depth samples
             //sm.StreamFrames(false);
 
             // Clean up
-            sm.Dispose();
+            //sm.Dispose();
         }
 
         pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
         {
             // work on sample.color
             PXCMImage.ImageData data;
-            sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ, out data);
-
-            data.ToBitmap(0, this.bmpSprite);
-
+            pxcmStatus stt = sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ, PXCMImage.PixelFormat.PIXEL_FORMAT_RGB32, out data);
+            this.bmpSprite = data.ToBitmap(0, this.bmpSprite);
             sample.color.ReleaseAccess(data);
-
             this.spriteTexture = ConversionServices.BitmapToTexture2D(GraphicsDevice, this.bmpSprite);
 
             // return NO ERROR to continue, or any ERROR to exit the loop
@@ -151,7 +148,7 @@ namespace AnDeTruApp
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            sm.AcquireFrame();
+            sm.AcquireFrame(true);
             sm.ReleaseFrame();
 
             // TODO: Add your drawing code here
