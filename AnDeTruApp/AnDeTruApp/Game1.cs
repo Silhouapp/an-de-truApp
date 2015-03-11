@@ -53,24 +53,6 @@ namespace AnDeTruApp
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-
-            //FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-
-            //List<string> devicesNames = new List<string>();
-
-            //foreach (FilterInfo device in devices)
-            //{
-            //    devicesNames.Add(device.Name);
-            //}
-
-            //this.spriteRect = new Rectangle();
-
-            //VideoCaptureDevice FinalVideo = new VideoCaptureDevice(devices[1].MonikerString);
-            //FinalVideo.NewFrame += new NewFrameEventHandler(FinalVideo_NewFrame);
-            //FinalVideo.Start();
-
-
             // Create a SenseManager instance
             sm = PXCMSenseManager.CreateInstance();
 
@@ -83,12 +65,6 @@ namespace AnDeTruApp
 
             handler.onNewSample = OnNewSample;
             sm.Init(handler);
-
-            // Stream depth samples
-            //sm.StreamFrames(false);
-
-            // Clean up
-            //sm.Dispose();
         }
 
         pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
@@ -105,23 +81,14 @@ namespace AnDeTruApp
             return pxcmStatus.PXCM_STATUS_NO_ERROR;
         }
 
-
-        //private void FinalVideo_NewFrame(object sender, NewFrameEventArgs eventArgs)
-        //{
-        //    // Convert camera stream to texture
-        //    if (eventArgs.Frame != null)
-        //    {
-        //        this.spriteTexture = ConversionServices.BitmapToTexture2D2(GraphicsDevice, eventArgs.Frame);
-        //    }
-        //}
-
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            // Clean up
+            sm.Dispose();
         }
 
         /// <summary>
