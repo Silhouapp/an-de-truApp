@@ -20,18 +20,23 @@ namespace AnDeTruSprites
             }
         }
 
-        public void addGesture()
+        public void addGestureView()
         {
             int gesturePlace = this.getRandomGesturePlace();
             if (gesturePlace == -1) return;
             Point position = new Point { OneDimensional = gesturePlace };
             Gesture randomGesture = Gestures.randomGesture();
-            addGestureIn(randomGesture, position);
+            addGestureViewIn(randomGesture, position);
         }
 
-        public void addGestureIn(Gesture gesture, Point position)
+        public void addGestureViewIn(Gesture gesture, Point position)
         {
-            gestures[position.OneDimensional] = new GestureView { Gesture = gesture };
+            SpriteViewDetail svd = Gestures.DetailsFor(gesture);
+            gestures[position.OneDimensional] = new GestureView {
+                Gesture = gesture,
+                Point = position,
+                Sprite = new AnimatedSprite(svd.Texture, svd.Rows, svd.Cols, 5)
+            };
         }
 
         public bool throwGesture(Gesture gesture, Point position)

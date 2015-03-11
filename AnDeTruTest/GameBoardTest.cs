@@ -13,25 +13,25 @@ namespace AnDeTruTest
         {
             GameBoard gameboard = new GameBoard();
             Assert.AreEqual(9, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(8, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(7, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(6, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(5, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(4, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(3, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(2, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(1, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(0, nullsInArray(gameboard.CurrentGestureViews));
-            gameboard.addGesture();
+            gameboard.addGestureView();
             Assert.AreEqual(0, nullsInArray(gameboard.CurrentGestureViews));
         }
 
@@ -40,7 +40,7 @@ namespace AnDeTruTest
         {
             GameBoard gameboard = new GameBoard();
             Point where = new Point { X = 1, Y = 1 };
-            gameboard.addGestureIn(new Rock(), where);
+            gameboard.addGestureViewIn(new Rock(), where);
             Assert.IsFalse(gameboard.throwGesture(new Scissors(), where));
             Assert.IsTrue(gameboard.throwGesture(new Rock(), where));
             Assert.AreEqual(1, gameboard.Score);
