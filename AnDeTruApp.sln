@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnDeTruSprites", "AnDeTruSp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnDeTruTest", "AnDeTruTest\AnDeTruTest.csproj", "{61034B7E-1B2E-41D5-81B5-2148315F2AA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splash", "..\..\Visual Studio 2012\Projects\Splash\Splash\Splash.csproj", "{24DA1426-5852-4B6E-80FD-603E95D3A56A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splash", "Splash\Splash.csproj", "{24DA1426-5852-4B6E-80FD-603E95D3A56A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
