@@ -19,6 +19,12 @@ namespace AnDeTruApp
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private AnimatedSprite animatedSprite;
+
+
+        // Store some information about the sprite's motion.
+        Vector2 spriteSpeed = new Vector2(50.0f, 50.0f);
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -47,7 +53,10 @@ namespace AnDeTruApp
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            Texture2D texture = Content.Load<Texture2D>("Rock");
+            animatedSprite = new AnimatedSprite(texture, 1, 5);
         }
 
         /// <summary>
@@ -70,7 +79,7 @@ namespace AnDeTruApp
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+            animatedSprite.Update();
 
             base.Update(gameTime);
         }
@@ -83,9 +92,13 @@ namespace AnDeTruApp
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            // Draw the sprite.
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            animatedSprite.Draw(spriteBatch, Vector2.Zero);
+            spriteBatch.End();
 
             base.Draw(gameTime);
+
         }
     }
 }
