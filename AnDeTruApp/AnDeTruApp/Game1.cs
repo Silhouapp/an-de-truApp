@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
+using AnDeTruSprites;
 
 namespace AnDeTruApp
 {
@@ -24,9 +25,6 @@ namespace AnDeTruApp
         SpriteBatch spriteBatch;
         PXCMSenseManager sm;
 
-        private AnimatedSprite animatedSprite;
-
-
         // Store some information about the sprite's motion.
         Vector2 spriteSpeed = new Vector2(50.0f, 50.0f);
 
@@ -34,6 +32,7 @@ namespace AnDeTruApp
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.graphics.IsFullScreen = true;
         }
 
         /// <summary>
@@ -72,8 +71,6 @@ namespace AnDeTruApp
             handler.onNewSample = OnNewSample;
             sm.Init(handler);
 		    Texture2D texture = Content.Load<Texture2D>("Paper2048");
-            animatedSprite = new AnimatedSprite(texture, 2, 2, 5);
-
         }
 
         pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
@@ -107,12 +104,7 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
             sm.AcquireFrame(false);
-            animatedSprite.Update();
 
             base.Update(gameTime);
         }
@@ -126,9 +118,6 @@ namespace AnDeTruApp
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-
-
-            animatedSprite.Draw(spriteBatch, Vector2.Zero);
 
             // TODO: Add your drawing code here
             if (this.spriteTexture != null)

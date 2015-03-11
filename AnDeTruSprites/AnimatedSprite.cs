@@ -5,13 +5,15 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace AnDeTruApp
+namespace AnDeTruSprites
 {
     public class AnimatedSprite
     {
         public Texture2D Texture { get; set; }
-        public int Rows { get; set; }
-        public int Columns { get; set; }
+        public Rectangle sourceRect{ get; set; }
+        public Rectangle destRect { get; set; }
+        private int Rows { get; set; }
+        private int Columns { get; set; }
         private int currentFrame;
         private int currentDraw;
         private int totalFrames;
@@ -38,27 +40,20 @@ namespace AnDeTruApp
             {
                 currentFrame = (2 * (totalFrames - 1)) - currentFrame;
             }
-            
-            if (currentDraw == ((totalFrames * 2) - 2 ) * fpd)
+
+            if (currentDraw == ((totalFrames * 2) - 2) * fpd)
             {
                 currentDraw = 0;
             }
 
-            
-
-        }
-
-        public void Draw(SpriteBatch spriteBatch, Vector2 location)
-        {
             int width = Texture.Width / Columns;
             int height = Texture.Height / Rows;
             int row = (int)((float)currentFrame / (float)Columns);
             int column = currentFrame % Columns;
 
-            Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
+            sourceRect = new Rectangle(width * column, height * row, width, height);
+            destRect = new Rectangle(0, 0, width, height);
 
-            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
         }
     }
 }
