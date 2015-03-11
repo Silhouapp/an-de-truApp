@@ -18,6 +18,7 @@ namespace AnDeTruSprites
         private int currentDraw;
         private int totalFrames;
         private int fpd;
+        private double scale;
 
         public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw)
         {
@@ -28,11 +29,13 @@ namespace AnDeTruSprites
             currentDraw = 0;
             totalFrames = Rows * Columns;
             fpd = framePerDraw;
+            scale = 0;
         }
 
         public void Update()
         {
             currentDraw++;
+            scale += 0.1;
 
             currentFrame = currentDraw / fpd;
 
@@ -52,7 +55,8 @@ namespace AnDeTruSprites
             int column = currentFrame % Columns;
 
             sourceRect = new Rectangle(width * column, height * row, width, height);
-            destRect = new Rectangle(0, 0, width, height);
+            destRect = new Rectangle(0, 0, (int)(width*scale), (int)(height*scale));
+            
 
         }
     }
