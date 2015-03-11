@@ -35,7 +35,7 @@ namespace AnDeTruSprites
         public void Update()
         {
             currentDraw++;
-            scale += 0.0005;
+            scale = Math.Min(0.2, scale + 0.0005);
 
             currentFrame = currentDraw / fpd;
 
