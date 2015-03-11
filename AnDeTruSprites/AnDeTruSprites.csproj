@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnDeTruSprite.cs" />
+    <Compile Include="AnimatedSprite.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="Gestures.cs" />
     <Compile Include="GestureView.cs" />

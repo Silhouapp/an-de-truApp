@@ -19,14 +19,8 @@ namespace AnDeTruApp
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        Texture2D spriteTexture;
-        Rectangle spriteRect;
-        System.Drawing.Bitmap bmpSprite;
+        CameraControl _camera;
         SpriteBatch spriteBatch;
-        PXCMSenseManager sm;
-
-        private AnimatedSprite animatedSprite;
-
 
         // Store some information about the sprite's motion.
         Vector2 spriteSpeed = new Vector2(50.0f, 50.0f);
@@ -35,6 +29,7 @@ namespace AnDeTruApp
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.graphics.IsFullScreen = true;
         }
 
         /// <summary>
@@ -45,7 +40,7 @@ namespace AnDeTruApp
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            this._camera = new CameraControl(GraphicsDevice);
 
             base.Initialize();
         }
@@ -59,39 +54,11 @@ namespace AnDeTruApp
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Create a SenseManager instance
-            sm = PXCMSenseManager.CreateInstance();
-            AnDeTruSprites.Gestures.loadGestures(
-                new KeyValuePair<Gesture, Texture2D>(new Rock(), Content.Load<Texture2D>("Paper2048"))
+            Gestures.loadGestures(
+                new KeyValuePair<Gesture, Texture2D>(new Paper(), this.Content.Load<Texture2D>("Paper2048"))
             );
-          
-            // Enable depth stream at 320x240x60fps
-            sm.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 320, 240, 60);
-            this.bmpSprite = new System.Drawing.Bitmap(320, 240);
-
-            // Initialize my event handler
-            PXCMSenseManager.Handler handler = new PXCMSenseManager.Handler();
-
-            handler.onNewSample = OnNewSample;
-            sm.Init(handler);
-		    Texture2D texture = Content.Load<Texture2D>("Paper2048");
-            animatedSprite = new AnimatedSprite(texture, 2, 2, 5);
-
         }
 
-        pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
-        {
-            // work on sample.color
-            PXCMImage.ImageData data;
-            pxcmStatus stt = sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ, PXCMImage.PixelFormat.PIXEL_FORMAT_RGB32, out data);
-            this.bmpSprite = data.ToBitmap(0, this.bmpSprite);
-            sample.color.ReleaseAccess(data);
-            this.spriteTexture = ConversionServices.BitmapToTexture2D(GraphicsDevice, this.bmpSprite);
-
-            // return NO ERROR to continue, or any ERROR to exit the loop
-
-            return pxcmStatus.PXCM_STATUS_NO_ERROR;
-        }
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -100,7 +67,7 @@ namespace AnDeTruApp
         protected override void UnloadContent()
         {
             // Clean up
-            sm.Dispose();
+            this._camera.UnloadContent();
         }
 
         /// <summary>
@@ -110,12 +77,8 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            sm.AcquireFrame(false);
-            animatedSprite.Update();
+            // Camera update needs to be closest to base.Update
+            this._camera.Update();
 
             base.Update(gameTime);
         }
@@ -126,28 +89,35 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
+            // Must be the first method to be called.
+            this.DrawBackground();
 
-            animatedSprite.Draw(spriteBatch, Vector2.Zero);
-
-            // TODO: Add your drawing code here
-            if (this.spriteTexture != null)
-            {
-                this.spriteRect.Height = GraphicsDevice.PresentationParameters.Bounds.Height;
-                this.spriteRect.Width = GraphicsDevice.PresentationParameters.Bounds.Width;
-
-                
-                spriteBatch.Draw(this.spriteTexture, this.spriteRect, Color.White);
-            }
-
-            sm.ReleaseFrame();
-            
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        /// </summary>
+        private void DrawBackground()
+        {
+
+            // make sure not to die if null
+            if (this._camera.SpriteTexture != null)
+            {
+                this._camera.SpriteRectangle.Height = GraphicsDevice.PresentationParameters.Bounds.Height;
+                this._camera.SpriteRectangle.Width = GraphicsDevice.PresentationParameters.Bounds.Width;
+
+
+                spriteBatch.Draw(this._camera.SpriteTexture, this._camera.SpriteRectangle, Color.White);
+            }
+
+            // Can add other shit here....
+
+
+            // this line needs to be last of method
+            this._camera.Draw();
 
         }
     }
