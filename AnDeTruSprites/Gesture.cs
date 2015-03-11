@@ -60,7 +60,7 @@ namespace AnDeTruSprites
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return this.GetType().GetHashCode();
         }
 
         public int CompareTo(object obj)

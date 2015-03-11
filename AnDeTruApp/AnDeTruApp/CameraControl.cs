@@ -15,7 +15,7 @@ namespace AnDeTruApp
 {
     public class CameraControl
     {
-        private Size captureSize = new Size(320, 240);
+        private Size captureSize = new Size(848, 480);
 
         public Microsoft.Xna.Framework.Rectangle SpriteRectangle;
         public Texture2D SpriteTexture { get; set; }
