@@ -47,6 +47,10 @@ namespace AnDeTruTest
             Assert.IsFalse(paper == rock2);
             Assert.IsFalse(rock == paper2);
             Assert.IsFalse(scissors == paper);
+
+            Assert.IsFalse(paper == null);
+            Assert.IsFalse(scissors == null);
+            Assert.IsFalse(rock == null);
         }
     }
 }

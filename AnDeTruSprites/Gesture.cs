@@ -38,12 +38,12 @@ namespace AnDeTruSprites
 
         public static bool operator ==(Gesture left, Gesture right)
         {
-            return (left.Equals(right));
+            return (System.Object.ReferenceEquals(left, right) || left.Equals(right));
         }
 
         public static bool operator !=(Gesture left, Gesture right)
         {
-            return (!left.Equals(right));
+            return (!System.Object.ReferenceEquals(left, right) || !left.Equals(right));
         }
         
         #endregion
