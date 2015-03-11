@@ -57,6 +57,8 @@ namespace AnDeTruApp
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Gestures.InitGestures(this.Content);
+            this._board.addGestureView();
+
         }
 
 
@@ -84,6 +86,7 @@ namespace AnDeTruApp
 
             // Camera update needs to be closest to base.Update
             this._camera.Update();
+            this._board.Update();
             //this._board.throwGesture(new Rock(), new AnDeTruSprites.Point { X = 1, Y = 1 });
 
             base.Update(gameTime);
@@ -106,9 +109,31 @@ namespace AnDeTruApp
 
         private void DrawGestures()
         {
+            var colWidth = GraphicsDevice.Viewport.Bounds.Width / 3;
+            var rowHeight = GraphicsDevice.Viewport.Bounds.Height / 3;
+
+
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
             //this._board.CurrentGestureViews.ForEach(g => spriteBatch.Draw(g.Sprite.Texture, g.Sprite.destRect, g.Sprite.sourceRect, Color.Transparent));
-            //this._board.CurrentGestureViews.ForEach()   
+            this._board.CurrentGestureViews.ForEach(gv =>
+            {
+                var sprite = gv.Sprite;
+                var destRect = sprite.destRect;
+
+                var x = gv.Point.X;
+                x *= colWidth;
+                x += colWidth / 2;
+                x -= destRect.Width / 2;
+
+                var y = gv.Point.Y;
+                y *= rowHeight;
+                y += rowHeight / 2;
+                y -= destRect.Height / 2;
+
+                destRect.Offset(x, y);
+                spriteBatch.Draw(sprite.Texture, destRect, sprite.sourceRect, Color.White);
+            }
+            );
 
             spriteBatch.End();
         }
@@ -129,7 +154,7 @@ namespace AnDeTruApp
 
             // Drawing lines
             this.InitializeBackgroundTexture();
-            
+
             // this line needs to be last of method
             this._camera.Draw();
         }
