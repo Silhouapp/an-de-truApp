@@ -13,7 +13,12 @@ namespace AnDeTruSprites
         /// </summary>
         /// <returns>Type</returns>
         abstract public Type WillWinGesture();
-
+        
+        /// <summary>
+        /// Will this gesture wins the other gesture?
+        /// </summary>
+        /// <param name="other">boolean. returns true if this gesture wins the other; otherwise, returns false.</param>
+        /// <returns></returns>
         public bool willWin(Gesture other)
         {
             return this.WillWinGesture().Equals(other.GetType());
@@ -43,18 +48,16 @@ namespace AnDeTruSprites
         
         #endregion
 
-        // override object.Equals
+        /// <summary>
+        /// Tells if two gestures are the same
+        /// </summary>
+        /// <param name="obj">other gesture.</param>
+        /// <returns>boolean. returns true if the gesture is the same as the other; otherwise, returns false.</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null || !this.GetType().IsInstanceOfType(obj))
-            {
-                return false;
-            }
-
-            return this.GetType() == obj.GetType();
+            return ((obj != null) && (this.GetType() == obj.GetType()));
         }
 
-        // override object.GetHashCode
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -68,7 +71,7 @@ namespace AnDeTruSprites
             {
                 return -1;
             }
-            else if (this.GetType().Equals(other.GetType()))
+            else if (this.Equals(other))
             {
                 return 0;
             }
