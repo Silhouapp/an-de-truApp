@@ -96,8 +96,7 @@ namespace AnDeTruSprites
             {
                 // Fucking immutablity
                 List<GestureView> val = new List<GestureView>(gestures.Count);
-                val.AddRange(gestures);
-                return val;
+                return gestures.Where(x => x != null).ToList<GestureView>();
             }
         }
 

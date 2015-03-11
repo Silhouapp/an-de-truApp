@@ -51,12 +51,7 @@ namespace AnDeTruTest
 
         private int nullsInArray(List<GestureView> objects)
         {
-            int i = 0;
-            foreach (var obj in objects)
-            {
-                if (obj == null) i++;
-            }
-            return i;
+            return 9 - objects.Count;
         }
     }
 }
