@@ -31,6 +31,7 @@ namespace AnDeTruSprites
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            this.addGestureView();
         }
 
         public void addGestureView()

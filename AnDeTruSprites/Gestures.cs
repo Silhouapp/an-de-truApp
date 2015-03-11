@@ -10,7 +10,6 @@ namespace AnDeTruSprites
 {
     public static class Gestures
     {
-        private static Gesture[] availableGestures;
         private static Dictionary<Gesture, SpriteViewDetail> gestures = new Dictionary<Gesture, SpriteViewDetail>();
 
         public static Gesture randomGesture()
@@ -48,14 +47,31 @@ namespace AnDeTruSprites
         public static void InitGestures(ContentManager cm)
         {
             Gestures.loadGestures(
-                new KeyValuePair<Gesture, SpriteViewDetail>(
+                new KeyValuePair<Gesture, SpriteViewDetail> (
                     new Paper(), 
-                    new SpriteViewDetail{
+                    new SpriteViewDetail {
                         Texture = cm.Load<Texture2D>("Paper2048"),
                         Rows = 2,
                         Cols = 2
                     }
-            ));
+                ), new KeyValuePair<Gesture, SpriteViewDetail>(
+                    new Rock(),
+                    new SpriteViewDetail
+                    {
+                        Texture = cm.Load<Texture2D>("Rock2048"),
+                        Rows = 2,
+                        Cols = 2
+                    }
+                ), new KeyValuePair<Gesture, SpriteViewDetail>(
+                    new Scissors(),
+                    new SpriteViewDetail
+                    {
+                        Texture = cm.Load<Texture2D>("Scissors2048"),
+                        Rows = 2,
+                        Cols = 2
+                    }
+                )
+            );
         }
 
         internal static SpriteViewDetail DetailsFor(Gesture gesture)
