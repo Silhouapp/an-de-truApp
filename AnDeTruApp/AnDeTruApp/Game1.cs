@@ -102,7 +102,7 @@ namespace AnDeTruApp
             this.DrawBackground();
             this.DrawGestures();
 
-            //EmphesizeSquareByNumber(4, Color.Red);
+            PaintByHandPosition();
 
             base.Draw(gameTime);
         }
@@ -216,6 +216,11 @@ namespace AnDeTruApp
                 spriteBatch.Draw(texture1px, rectangle, color);
                 spriteBatch.End();
             }
+        }
+
+        private void PaintByHandPosition()
+        {
+            int x = this._camera.HandLocation.X;
         }
     }
 }
