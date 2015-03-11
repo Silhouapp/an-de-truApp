@@ -11,6 +11,11 @@ namespace AnDeTruTest
         [TestMethod]
         public void AddGestureTest()
         {
+            Gestures.loadGestures(
+                new KeyValuePair<Gesture, SpriteViewDetail>( new Rock(), new SpriteViewDetail() ),
+                new KeyValuePair<Gesture, SpriteViewDetail>(new Paper(), new SpriteViewDetail()),
+                new KeyValuePair<Gesture, SpriteViewDetail>(new Scissors(), new SpriteViewDetail())
+            );
             GameBoard gameboard = new GameBoard();
             Assert.AreEqual(9, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGestureView();
