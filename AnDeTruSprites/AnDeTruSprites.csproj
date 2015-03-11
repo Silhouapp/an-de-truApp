@@ -60,7 +60,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnDeTruSprite.cs" />
+    <Compile Include="GameBoard.cs" />
+    <Compile Include="Gestures.cs" />
     <Compile Include="Paper.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Rock.cs" />
     <Compile Include="Gesture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
