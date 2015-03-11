@@ -105,7 +105,7 @@ namespace AnDeTruApp
 
             // TODO: Add your update logic here
             sm.AcquireFrame(false);
-            sm.ReleaseFrame();
+            
 
             base.Update(gameTime);
         }
@@ -128,6 +128,8 @@ namespace AnDeTruApp
                 spriteBatch.Draw(this.spriteTexture, this.spriteRect, Color.White);
                 spriteBatch.End();
             }
+
+            sm.ReleaseFrame();
 
             base.Draw(gameTime);
         }
