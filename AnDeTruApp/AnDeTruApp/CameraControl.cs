@@ -97,25 +97,29 @@ namespace AnDeTruApp
                 }
             }
             PXCMHandData.GestureData GestureData;//D
+            Gesture g = null;
             if (handData.IsGestureFired("fist", out GestureData))//D
             {
+                g = new Rock();
                 //iROCK++;
             }
 
             if (handData.IsGestureFired("spreadfingers", out GestureData))//D
             {
+                g = new Paper();
                 //iPaper++;
             }
 
             if (handData.IsGestureFired("v_sign", out GestureData))//D
             {
+                g = new Scissors();
                 //iScissor++;
             }
 
             EventHandler<GestureEventArgs> handler = GestureCapturedHandler;
-            if (handler != null)
+            if (handler != null && g != null)
             {
-                handler(this, new GestureEventArgs() { Gesture = new Rock(), X = 1, Y = 1 });
+                handler(this, new GestureEventArgs() { Gesture = g, X = this.HandLocation.X, Y = this.HandLocation.Y });
             }
 
         }

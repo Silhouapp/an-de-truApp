@@ -24,6 +24,16 @@ namespace AnDeTruSprites
             }
         }
 
+        public Point()
+        {
+
+        }
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
         public override int GetHashCode()
         {
             return this.ToString().GetHashCode();

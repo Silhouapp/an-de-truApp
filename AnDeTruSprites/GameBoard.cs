@@ -83,6 +83,8 @@ namespace AnDeTruSprites
                 }
             }
 
+            System.Diagnostics.Debug.WriteLine(String.Format("{0} - {1}", gesture.GetType().Name, result));
+
             return result;
         }
 
@@ -105,9 +107,12 @@ namespace AnDeTruSprites
         {
             get
             {
-                // Fucking immutablity
-                List<GestureView> val = new List<GestureView>(gestures.Count);
-                return gestures.Where(x => x != null).ToList<GestureView>();
+                lock (this)
+                {
+                    // Fucking immutablity
+                    List<GestureView> val = new List<GestureView>(gestures.Count);
+                    return gestures.Where(x => x != null).ToList<GestureView>();
+                }
             }
         }
 

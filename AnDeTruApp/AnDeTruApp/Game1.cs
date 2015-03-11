@@ -50,7 +50,9 @@ namespace AnDeTruApp
 
         void _camera_GestureCapturedHandler(object sender, GestureEventArgs e)
         {
-            this._board.throwGesture(e.Gesture, new AnDeTruSprites.Point() { X = e.X, Y = e.Y });
+            var colWidth = GraphicsDevice.Viewport.Bounds.Width / 3;
+            var rowHeight = GraphicsDevice.Viewport.Bounds.Height / 3;
+            this._board.throwGesture(e.Gesture, ConversionServices.FromLocationToIndex(e.X, e.Y, colWidth,rowHeight));
         }
 
         /// <summary>
@@ -93,7 +95,6 @@ namespace AnDeTruApp
             // Camera update needs to be closest to base.Update
             this._camera.Update();
             this._board.Update();
-            //this._board.throwGesture(new Rock(), new AnDeTruSprites.Point { X = 1, Y = 1 });
 
             base.Update(gameTime);
         }

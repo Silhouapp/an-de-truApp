@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using Microsoft.Xna.Framework;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -31,6 +32,25 @@ namespace AnDeTruApp
             memoryStream.Dispose();
 
             return texture;
+        }
+
+        //public static Microsoft.Xna.Framework.Point FromIndexToLocation(int i, int j, int colWidth, int rowHeight)
+        //{
+        //    var x = i * colWidth;
+        //    x += colWidth / 2;
+
+        //    var y = j * rowHeight;
+        //    y += rowHeight / 2;
+
+        //    return new Microsoft.Xna.Framework.Point(x, y);
+        //}
+
+        public static AnDeTruSprites.Point FromLocationToIndex(int x, int y, int colWidth, int rowHeight)
+        {
+            int i = x / colWidth;
+            int j = y / rowHeight;
+
+            return new AnDeTruSprites.Point(i, j);
         }
     }
 }
