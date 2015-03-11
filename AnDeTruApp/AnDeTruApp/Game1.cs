@@ -21,7 +21,9 @@ namespace AnDeTruApp
         GraphicsDeviceManager graphics;
         Texture2D spriteTexture;
         Rectangle spriteRect;
+        System.Drawing.Bitmap bmpSprite;
         SpriteBatch spriteBatch;
+        PXCMSenseManager sm;
 
         public Game1()
         {
@@ -64,36 +66,46 @@ namespace AnDeTruApp
 
             //this.spriteRect = new Rectangle();
 
-            VideoCaptureDevice FinalVideo = new VideoCaptureDevice(devices[1].MonikerString);
-            FinalVideo.NewFrame += new NewFrameEventHandler(FinalVideo_NewFrame);
-            FinalVideo.Start();
+            //VideoCaptureDevice FinalVideo = new VideoCaptureDevice(devices[1].MonikerString);
+            //FinalVideo.NewFrame += new NewFrameEventHandler(FinalVideo_NewFrame);
+            //FinalVideo.Start();
 
 
             // Create a SenseManager instance
-            PXCMSenseManager sm = PXCMSenseManager.CreateInstance();
+            sm = PXCMSenseManager.CreateInstance();
 
             // Enable depth stream at 320x240x60fps
-            sm.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_DEPTH, 320, 240, 60);
+            sm.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 320, 240, 60);
+            this.bmpSprite = new System.Drawing.Bitmap(320, 240);
 
             // Initialize my event handler
             PXCMSenseManager.Handler handler = new PXCMSenseManager.Handler();
 
-            handler.onNewSample += new PXCMSenseManager.Handler.OnNewSampleDelegate(OnNewSample);
+            //handler.onNewSample = OnNewSample;
             sm.Init(handler);
 
             // Stream depth samples
-            sm.StreamFrames(true);
+            //sm.StreamFrames(false);
 
             // Clean up
             sm.Dispose();
         }
 
-        pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample) 
+        pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
         {
-           // work on sample.color
+            // work on sample.color
+            PXCMImage.ImageData data;
+            sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ, out data);
 
-           // return NO ERROR to continue, or any ERROR to exit the loop
-           return pxcmStatus.PXCM_STATUS_NO_ERROR;
+            data.ToBitmap(0, this.bmpSprite);
+
+            sample.color.ReleaseAccess(data);
+
+            this.spriteTexture = ConversionServices.BitmapToTexture2D(GraphicsDevice, this.bmpSprite);
+
+            // return NO ERROR to continue, or any ERROR to exit the loop
+
+            return pxcmStatus.PXCM_STATUS_NO_ERROR;
         }
 
 
@@ -138,6 +150,9 @@ namespace AnDeTruApp
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            sm.AcquireFrame();
+            sm.ReleaseFrame();
 
             // TODO: Add your drawing code here
             if (this.spriteTexture != null)
