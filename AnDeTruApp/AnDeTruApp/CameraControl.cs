@@ -84,10 +84,5 @@ namespace AnDeTruApp
         {
             this.SenseManager.ReleaseFrame();
         }
-
-        public void SetRectangle(int width, int height)
-        {
-
-        }
     }
 }
