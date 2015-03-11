@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AnDeTruSprites;
+using System.Collections.Generic;
 
 namespace AnDeTruTest
 {
@@ -11,27 +12,27 @@ namespace AnDeTruTest
         public void AddGestureTest()
         {
             GameBoard gameboard = new GameBoard();
-            Assert.AreEqual(9, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(9, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(8, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(8, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(7, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(7, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(6, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(6, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(5, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(5, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(4, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(4, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(3, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(3, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(2, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(2, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(1, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(1, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(0, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(0, nullsInArray(gameboard.CurrentGestureViews));
             gameboard.addGesture();
-            Assert.AreEqual(0, nullsInArray(gameboard.CurrentGestures));
+            Assert.AreEqual(0, nullsInArray(gameboard.CurrentGestureViews));
         }
 
         [TestMethod]
@@ -48,7 +49,7 @@ namespace AnDeTruTest
 
         }
 
-        private int nullsInArray(Object[] objects)
+        private int nullsInArray(List<GestureView> objects)
         {
             int i = 0;
             foreach (var obj in objects)

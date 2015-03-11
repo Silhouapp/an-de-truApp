@@ -8,8 +8,17 @@ namespace AnDeTruSprites
 {
     public class GameBoard
     {
-        private Gesture[] gestures = new Gesture[9];
+        private List<GestureView> gestures;
         int score = 0;
+
+        public GameBoard()
+        {
+            this.gestures = new List<GestureView>(9);
+            for (int i = 0; i < 9; i++)
+            {
+                this.gestures.Add(null);
+            }
+        }
 
         public void addGesture()
         {
@@ -22,13 +31,17 @@ namespace AnDeTruSprites
 
         public void addGestureIn(Gesture gesture, Point position)
         {
-            gestures[position.OneDimensional] = gesture;
+            gestures[position.OneDimensional] = new GestureView { Gesture = gesture };
         }
 
         public bool throwGesture(Gesture gesture, Point position)
         {
             bool result = false;
-            Gesture gestureStored = this.gestures[position.OneDimensional];
+            GestureView gestureView = this.gestures[position.OneDimensional];
+            Gesture gestureStored = this.gestures[position.OneDimensional].Gesture;
+            if (gestureView == null)
+            {
+            }
             if (gestureStored == null || gesture < gestureStored)
             {
                 result = false;
@@ -55,15 +68,16 @@ namespace AnDeTruSprites
             }
         }
 
-        public Gesture[] CurrentGestures
+        /// <summary>
+        /// Its fucking immutable, bitch
+        /// </summary>
+        public List<GestureView> CurrentGestureViews
         {
             get
             {
-                Gesture[] val = new Gesture[gestures.Length];
-                for (int i = 0; i < gestures.Length; i++)
-                {
-                    val[i] = gestures[i];
-                }
+                // Fucking immutablity
+                List<GestureView> val = new List<GestureView>(gestures.Count);
+                val.AddRange(gestures);
                 return val;
             }
         }
@@ -80,8 +94,8 @@ namespace AnDeTruSprites
         {
             get
             {
-                List<int> arr = new List<int>(gestures.Length);
-                for (int i = 0; i < gestures.Length; i++)
+                List<int> arr = new List<int>(gestures.Count);
+                for (int i = 0; i < gestures.Count; i++)
                 {
                     if (gestures[i] == null) arr.Add(i);
                 }

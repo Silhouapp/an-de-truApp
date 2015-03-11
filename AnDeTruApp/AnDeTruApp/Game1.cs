@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
+using AnDeTruSprites;
 
 namespace AnDeTruApp
 {
@@ -60,7 +61,9 @@ namespace AnDeTruApp
 
             // Create a SenseManager instance
             sm = PXCMSenseManager.CreateInstance();
-
+            AnDeTruSprites.Gestures.loadGestures(
+                new KeyValuePair<Gesture, Texture2D>(new Rock(), null)
+            );
           
             // Enable depth stream at 320x240x60fps
             sm.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 320, 240, 60);
