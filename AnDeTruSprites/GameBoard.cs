@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
 
 namespace AnDeTruSprites
 {
@@ -10,6 +11,7 @@ namespace AnDeTruSprites
     {
         private List<GestureView> gestures;
         int score = 0;
+        private Timer timer;
 
         public GameBoard()
         {
@@ -18,6 +20,17 @@ namespace AnDeTruSprites
             {
                 this.gestures.Add(null);
             }
+
+            this.timer = new Timer
+            {
+                Interval = 2000,
+                Enabled = true
+            };
+            timer.Elapsed += timer_Elapsed;
+        }
+
+        void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
         }
 
         public void addGesture()
