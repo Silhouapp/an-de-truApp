@@ -52,11 +52,8 @@ namespace AnDeTruApp
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            Texture2D texture = Content.Load<Texture2D>("Rock");
-            animatedSprite = new AnimatedSprite(texture, 1, 5);
+            Texture2D texture = Content.Load<Texture2D>("Paper2048");
+            animatedSprite = new AnimatedSprite(texture, 2, 2, 5);
         }
 
         /// <summary>
