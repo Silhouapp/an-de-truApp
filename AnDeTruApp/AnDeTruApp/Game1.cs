@@ -29,7 +29,7 @@ namespace AnDeTruApp
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            //this.graphics.IsFullScreen = true;
+            this.graphics.IsFullScreen = true;
         }
 
         /// <summary>
