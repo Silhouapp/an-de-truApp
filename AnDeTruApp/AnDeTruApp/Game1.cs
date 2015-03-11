@@ -62,7 +62,7 @@ namespace AnDeTruApp
             // Create a SenseManager instance
             sm = PXCMSenseManager.CreateInstance();
             AnDeTruSprites.Gestures.loadGestures(
-                new KeyValuePair<Gesture, Texture2D>(new Rock(), null)
+                new KeyValuePair<Gesture, Texture2D>(new Rock(), Content.Load<Texture2D>("Paper2048"))
             );
           
             // Enable depth stream at 320x240x60fps
