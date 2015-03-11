@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using System.Drawing;
 using System.Diagnostics;
 using AnDeTruSprites;
+using System.Timers;
 
 namespace AnDeTruApp
 {
@@ -39,7 +40,15 @@ namespace AnDeTruApp
         PXCMHandData handData;
 
         public event EventHandler<GestureEventArgs> GestureCapturedHandler;
-
+        private  int  iROCK = 0;
+        private  int  iPaper = 0;
+        private  int  iScissor = 0;
+        private int iXROCK = 0;
+        private int iXPaper = 0;
+        private int iXScissor = 0;
+        private int iYROCK = 0;
+        private int iYPaper = 0;
+        private int iYScissor = 0;
         public CameraControl(GraphicsDevice d)
         {
             // Save the graphic device
@@ -90,40 +99,81 @@ namespace AnDeTruApp
                         PXCMHandData.JointData jointData;
                         IHandData.QueryTrackedJoint((PXCMHandData.JointType)1, out jointData);
                         nodes[i][1] = jointData;
-                        Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
-                        this.HandLocation.X = (int)nodes[i][1].positionImage.x;
-                        this.HandLocation.Y = (int)nodes[i][1].positionImage.y;
+                        //Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
+
                     }
                 }
+                PXCMHandData.GestureData GestureData;//D
+               
+                if (handData.IsGestureFired("fist", out GestureData))//D
+                {           
+                    iROCK++;
+                    iXROCK += (int)nodes[i][1].positionImage.x;
+                    iYROCK += (int)nodes[i][1].positionImage.y;
+                }
+
+                if (handData.IsGestureFired("spreadfingers", out GestureData))//D
+                {
+                    iPaper++;
+                    iXPaper += (int)nodes[i][1].positionImage.x;
+                    iYPaper += (int)nodes[i][1].positionImage.y;
+                }
+
+                if (handData.IsGestureFired("v_sign", out GestureData))//D
+                {
+                    iScissor++;
+                    iXScissor += (int)nodes[i][1].positionImage.x;
+                    iYScissor += (int)nodes[i][1].positionImage.y;
+                }
+
+               
+                    Timer t = new Timer();
+                    t.Interval = 100;
+                    t.Elapsed += inzOutPut;
+                    t.Enabled = true;
             }
-            PXCMHandData.GestureData GestureData;//D
+
+
+        }
+        public void inzOutPut(object sender, ElapsedEventArgs e)
+        {
             Gesture g = null;
-            if (handData.IsGestureFired("fist", out GestureData))//D
+            int iAvgX = 0;
+            int iAvgY = 0;
+            if (iROCK > iPaper && iROCK > iScissor)
             {
                 g = new Rock();
-                //iROCK++;
+                iAvgX = iXROCK / iROCK;
+                iAvgY = iYROCK / iROCK;
             }
-
-            if (handData.IsGestureFired("spreadfingers", out GestureData))//D
+            else if (iPaper > iROCK && iPaper > iScissor)
             {
                 g = new Paper();
-                //iPaper++;
+                iAvgX = iXPaper / iPaper;
+                iAvgY = iYPaper / iPaper;
             }
-
-            if (handData.IsGestureFired("v_sign", out GestureData))//D
+            else if (iScissor != 0)
             {
                 g = new Scissors();
-                //iScissor++;
+                iAvgX = iXScissor / iScissor;
+                iAvgY = iYScissor / iScissor;
             }
 
             EventHandler<GestureEventArgs> handler = GestureCapturedHandler;
             if (handler != null && g != null)
             {
-                handler(this, new GestureEventArgs() { Gesture = g, X = this.HandLocation.X, Y = this.HandLocation.Y });
+                handler(this, new GestureEventArgs() { Gesture = g, X = iAvgX, Y = iAvgY });
             }
-
+            iROCK = 0;
+            iPaper = 0;
+            iScissor = 0;
+            iXROCK = 0;
+            iXPaper = 0;
+            iXScissor = 0;
+            iYROCK = 0;
+            iYPaper = 0;
+            iYScissor = 0;
         }
-
         private pxcmStatus onProcessedFrame(int mid, PXCMBase module, PXCMCapture.Sample sample)
         {
             if (mid == PXCMHandModule.CUID)
