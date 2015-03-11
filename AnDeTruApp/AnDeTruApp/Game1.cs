@@ -236,7 +236,7 @@ namespace AnDeTruApp
                 boundHeight = this._camera.SpriteBitmap.Height;
                 boundWidth = this._camera.SpriteBitmap.Width;
 
-                int x = (int)((boundWidth - (this._camera.HandLocation.X + 50)) / (boundWidth / 3));
+                int x = (int)((boundWidth - (this._camera.HandLocation.X + 80)) / (boundWidth / 3));
                 int y = (int)((this._camera.HandLocation.Y) / (boundHeight / 3));
                 int i = new AnDeTruSprites.Point { X = x, Y = y }.OneDimensional;
 
