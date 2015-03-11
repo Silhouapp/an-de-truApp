@@ -14,7 +14,7 @@ namespace AnDeTruSprites
 
         public static Gesture randomGesture()
         {
-            return AvailableGestures[new Random().Next(0, AvailableGestures.Count - 1)];
+            return AvailableGestures[new Random().Next(0, AvailableGestures.Count)];
         }
 
         public static Dictionary<Gesture, SpriteViewDetail> loadGestures(params KeyValuePair<Gesture, SpriteViewDetail>[] gestureTextureKeyValuePairs)

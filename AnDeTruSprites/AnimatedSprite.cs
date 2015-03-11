@@ -35,7 +35,7 @@ namespace AnDeTruSprites
         public void Update()
         {
             currentDraw++;
-            scale += 0.1;
+            scale += 0.0005;
 
             currentFrame = currentDraw / fpd;
 
@@ -55,9 +55,7 @@ namespace AnDeTruSprites
             int column = currentFrame % Columns;
 
             sourceRect = new Rectangle(width * column, height * row, width, height);
-            destRect = new Rectangle(0, 0, (int)(width*scale), (int)(height*scale));
-            
-
+            destRect = new Rectangle(0, 0, (int)(width * scale), (int)(height * scale));
         }
     }
 }
