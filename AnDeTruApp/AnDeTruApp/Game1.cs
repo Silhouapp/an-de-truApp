@@ -99,7 +99,7 @@ namespace AnDeTruApp
             this.DrawBackground();
             this.DrawGestures();
 
-            EmphesizeSquareByNumber(4, Color.Red);
+            //EmphesizeSquareByNumber(4, Color.Red);
 
             base.Draw(gameTime);
         }
@@ -122,7 +122,6 @@ namespace AnDeTruApp
                 this._camera.SpriteRectangle.Height = GraphicsDevice.PresentationParameters.Bounds.Height;
                 this._camera.SpriteRectangle.Width = GraphicsDevice.PresentationParameters.Bounds.Width;
 
-
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
                 spriteBatch.Draw(this._camera.SpriteTexture, this._camera.SpriteRectangle, Color.White);
                 spriteBatch.End();
@@ -144,6 +143,9 @@ namespace AnDeTruApp
             int height = GraphicsDevice.PresentationParameters.Bounds.Height;
             int width = GraphicsDevice.PresentationParameters.Bounds.Width;
 
+            Color color = Color.White;
+            color.A = 80;
+
             Texture2D texture1px = new Texture2D(graphics.GraphicsDevice, 1, 1);
             texture1px.SetData(new Color[] { Color.White });
 
@@ -154,8 +156,8 @@ namespace AnDeTruApp
                 Rectangle rectangleX = new Rectangle((int)((width / 3) * (x + 1)), 0, 3, height);
                 Rectangle rectangleY = new Rectangle(0, (int)((height / 3) * (x + 1)), width, 3);
 
-                spriteBatch.Draw(texture1px, rectangleX, Color.White);
-                spriteBatch.Draw(texture1px, rectangleY, Color.White);
+                spriteBatch.Draw(texture1px, rectangleX, color);
+                spriteBatch.Draw(texture1px, rectangleY, color);
             }
 
             spriteBatch.End();
