@@ -16,12 +16,6 @@ using System.Timers;
 
 namespace AnDeTruApp
 {
-    enum enmGesture
-    {
-        Fist,
-        SpreadHand,
-        VShape
-    }
     public class GestureEventArgs : EventArgs
     {
         public Gesture Gesture { get; set; }
@@ -31,6 +25,10 @@ namespace AnDeTruApp
 
     public class CameraControl
     {
+        const string fist_gesture = "fist";
+        const string v_gesture = "v_sign";
+        const string spread_gesture = "spreadfingers";
+
         private Size captureSize = new Size(848, 480);
 
         public Microsoft.Xna.Framework.Rectangle SpriteRectangle;
@@ -51,6 +49,9 @@ namespace AnDeTruApp
         private int[][] arrGestureTypeCount;
         private int nFrameCount = 0;
         private int[] nHandGestureCount;
+
+        private Dictionary<string, int> gestureCount = new Dictionary<string, int>();
+
         public CameraControl(GraphicsDevice d)
         {
             // Save the graphic device
@@ -73,9 +74,9 @@ namespace AnDeTruApp
             hand = SenseManager.QueryHand();
             handData = hand.CreateOutput();
             PXCMHandConfiguration handConfiguration = hand.CreateActiveConfiguration();//D
-            handConfiguration.EnableGesture("fist", true);//D
-            handConfiguration.EnableGesture("spreadfingers", true);//D
-            handConfiguration.EnableGesture("v_sign", true);//D
+            handConfiguration.EnableGesture(fist_gesture, true);//D
+            handConfiguration.EnableGesture(spread_gesture, true);//D
+            handConfiguration.EnableGesture(v_gesture, true);//D
             handConfiguration.EnableTrackedJoints(true);
             handConfiguration.SubscribeGesture(OnFiredGesture);
             handConfiguration.ApplyChanges();
@@ -89,6 +90,11 @@ namespace AnDeTruApp
             arrGestureTypeCount = new int[2][];
             arrGestureTypeCount[0] = new int[3];
             arrGestureTypeCount[1] = new int[3];
+
+            this.gestureCount.Add(fist_gesture, 0);
+            this.gestureCount.Add(v_gesture, 0);
+            this.gestureCount.Add(spread_gesture, 0);
+
             handler.onNewSample = OnNewSample;
             handler.onModuleProcessedFrame = new PXCMSenseManager.Handler.OnModuleProcessedFrameDelegate(onProcessedFrame);
 
@@ -100,38 +106,25 @@ namespace AnDeTruApp
             PXCMHandData.JointData[][] nodes = new PXCMHandData.JointData[][] { new PXCMHandData.JointData[0x20], new PXCMHandData.JointData[0x20] };
             PXCMHandData.IHand IHandData;
             int numOfHands = handData.QueryNumberOfHands();
-            for (int i = 0; i < numOfHands; i++)
+            //for (int i = 0; i < numOfHands; i++)
+            //{
+            if (handData.QueryHandData(PXCMHandData.AccessOrderType.ACCESS_ORDER_BY_ID, 0, out IHandData) == pxcmStatus.PXCM_STATUS_NO_ERROR)
             {
-                if (handData.QueryHandData(PXCMHandData.AccessOrderType.ACCESS_ORDER_BY_ID, i, out IHandData) == pxcmStatus.PXCM_STATUS_NO_ERROR)
+                if (handData != null)
                 {
-                    if (handData != null)
-                    {
-                        PXCMHandData.JointData jointData;
-                        IHandData.QueryTrackedJoint(PXCMHandData.JointType.JOINT_CENTER, out jointData);
-                        nodes[i][1] = jointData;
-                        //Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
-                        arrX[i][nHandGestureCount[i]] = nodes[i][1].positionImage.x;
-                        arrY[i][nHandGestureCount[i]] = nodes[i][1].positionImage.y;
-                        nHandGestureCount[i]++;
-                        PXCMHandData.GestureData GestureData;//D
+                    PXCMHandData.JointData jointData;
+                    IHandData.QueryTrackedJoint(PXCMHandData.JointType.JOINT_CENTER, out jointData);
+                    nodes[0][1] = jointData;
+                    //Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
+                    this.HandLocation.X = (int)nodes[0][1].positionImage.x;
+                    this.HandLocation.Y = (int)nodes[0][1].positionImage.y;
+                    nHandGestureCount[0]++;
 
-                        if (handData.IsGestureFired("fist", out GestureData))//D
-                        {
-                            arrGestureTypeCount[i][(int)enmGesture.Fist]++;
-                        }
-                        else if (handData.IsGestureFired("spreadfingers", out GestureData))//D
-                        {
-                            arrGestureTypeCount[i][(int)enmGesture.SpreadHand]++;
-                        }
-                        else if (handData.IsGestureFired("v_sign", out GestureData))//D
-                        {
-                            arrGestureTypeCount[i][(int)enmGesture.VShape]++;
-                        }
-                    }
-
+                    this.gestureCount[gestureData.name]++;
                 }
-
+                //}
             }
+
             if (nFrameCount >= 7)
             {
                 inzOutPut();
@@ -141,35 +134,14 @@ namespace AnDeTruApp
         private void inzOutPut()
         {
             Gesture g = calcDominintGesture(0);
-            int nXMedian = (int)calcMedian(arrX[0], nHandGestureCount[0]);
-            int nYMedian = (int)calcMedian(arrY[0], nHandGestureCount[0]);
+            //int nXMedian = (int)calcMedian(arrX[0], nHandGestureCount[0]);
+            //int nYMedian = (int)calcMedian(arrY[0], nHandGestureCount[0]);
 
             EventHandler<GestureEventArgs> handler = GestureCapturedHandler;
             if (handler != null && g != null)
             {
-                handler(this, new GestureEventArgs() { Gesture = g, X = nXMedian, Y = nYMedian });
+                handler(this, new GestureEventArgs() { Gesture = g, X = this.HandLocation.X, Y = this.HandLocation.Y });
             }
-            if(handData.QueryNumberOfHands() == 2)
-            {
-                g = calcDominintGesture(1);
-                nXMedian = (int)calcMedian(arrX[1], nHandGestureCount[1]);
-                nYMedian = (int)calcMedian(arrY[1], nHandGestureCount[1]);
-                
-                if (handler != null && g != null)
-                {
-                    this.HandLocation.X = nXMedian;
-                    this.HandLocation.Y = nYMedian;
-                    handler(this, new GestureEventArgs() { Gesture = g, X = nXMedian, Y = nYMedian });
-                }
-            }
-            Array.Clear(arrGestureTypeCount[0],0,3);
-            Array.Clear(arrGestureTypeCount[1], 0, 3);
-            Array.Clear(nHandGestureCount,0,2);
-            nFrameCount = 0;
-            Array.Clear(arrX[0],0,60);
-            Array.Clear(arrX[1], 0, 60);
-            Array.Clear(arrY[0], 0, 60);
-            Array.Clear(arrY[1], 0, 60);
         }
 
         private float calcMedian(float[] array,int HandGestureCount)
@@ -178,24 +150,26 @@ namespace AnDeTruApp
             return array[HandGestureCount / 2]; ;
         }
 
+
         private Gesture calcDominintGesture(int ihand)
         {
             Gesture DominintGesture = null;
-            if ((arrGestureTypeCount[ihand][(int)enmGesture.Fist] > arrGestureTypeCount[ihand][(int)enmGesture.SpreadHand])
-                && (arrGestureTypeCount[ihand][(int)enmGesture.Fist] > arrGestureTypeCount[ihand][(int)enmGesture.VShape]))
+
+            List<KeyValuePair<string, int>> myList = this.gestureCount.ToList();
+
+            myList.Sort((first, next) =>
             {
-                DominintGesture = new Rock();
-            }
-            else if ((arrGestureTypeCount[ihand][(int)enmGesture.SpreadHand] > arrGestureTypeCount[ihand][(int)enmGesture.Fist])
-                && (arrGestureTypeCount[ihand][(int)enmGesture.SpreadHand] > arrGestureTypeCount[ihand][(int)enmGesture.VShape]))
-            {
-                DominintGesture = new Paper();
-            }
-            else if ((arrGestureTypeCount[ihand][(int)enmGesture.VShape] > arrGestureTypeCount[ihand][(int)enmGesture.Fist])
-                && (arrGestureTypeCount[ihand][(int)enmGesture.VShape] > arrGestureTypeCount[ihand][(int)enmGesture.SpreadHand]))
-            {
-                DominintGesture = new Scissors();
-            }
+                return first.Value.CompareTo(next.Value);
+            });
+
+            if (myList[2].Key == v_gesture) return new Scissors();
+            else if (myList[2].Key == fist_gesture) return new Rock();
+            else if (myList[2].Key == spread_gesture) return new Paper();
+
+            this.gestureCount[v_gesture] = 0;
+            this.gestureCount[fist_gesture] = 0;
+            this.gestureCount[spread_gesture] = 0;
+
             return DominintGesture;
         }
         private pxcmStatus onProcessedFrame(int mid, PXCMBase module, PXCMCapture.Sample sample)
