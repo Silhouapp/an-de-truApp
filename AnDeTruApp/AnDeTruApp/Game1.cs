@@ -74,6 +74,10 @@ namespace AnDeTruApp
                         GraphicsDevice.PresentationParameters.Bounds.Width,
                         GraphicsDevice.PresentationParameters.Bounds.Height);
 
+            Song s = this.Content.Load<Song>("taking the hobbits to isengard");
+            MediaPlayer.Play(s);
+            MediaPlayer.IsRepeating = true;
+
             Gestures.InitGestures(this.Content);
             this._board.addGestureView();
         }
