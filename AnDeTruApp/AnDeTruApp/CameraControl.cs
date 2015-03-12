@@ -31,6 +31,10 @@ namespace AnDeTruApp
         public System.Drawing.Bitmap SpriteBitmap { get; set; }
         public PXCMSenseManager SenseManager { get; set; }
 
+        public Dictionary<Gesture, int> helloHello;
+        List<int> Xs = new List<int>();
+        List<int> Ys = new List<int>();
+
         public PXCMHandModule hand  { get; set; }
 
         public System.Drawing.Point HandLocation;
@@ -39,9 +43,15 @@ namespace AnDeTruApp
         PXCMHandData handData;
 
         public event EventHandler<GestureEventArgs> GestureCapturedHandler;
+        private int times;
 
         public CameraControl(GraphicsDevice d)
         {
+            this.helloHello = new Dictionary<Gesture, int>();
+            this.helloHello.Add(new Rock(), 0);
+            this.helloHello.Add(new Scissors(), 0);
+            this.helloHello.Add(new Paper(), 0);
+
             // Save the graphic device
             _gd = d;
 
@@ -90,7 +100,7 @@ namespace AnDeTruApp
                         PXCMHandData.JointData jointData;
                         IHandData.QueryTrackedJoint((PXCMHandData.JointType)1, out jointData);
                         nodes[i][1] = jointData;
-                        Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
+                        //Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
                         this.HandLocation.X = (int)nodes[i][1].positionImage.x;
                         this.HandLocation.Y = (int)nodes[i][1].positionImage.y;
                     }
@@ -119,7 +129,23 @@ namespace AnDeTruApp
             EventHandler<GestureEventArgs> handler = GestureCapturedHandler;
             if (handler != null && g != null)
             {
-                handler(this, new GestureEventArgs() { Gesture = g, X = this.HandLocation.X, Y = this.HandLocation.Y });
+                helloHello[g]++;
+                Xs.Add(this.HandLocation.X);
+                Ys.Add(this.HandLocation.Y);
+                times++;
+
+                if (times > 10)
+                {
+                    int xx = Xs[Xs.Count/2];
+                    int yy = Ys[Ys.Count/2];
+                    times = 0;
+                    Xs.Clear();
+                    Ys.Clear();
+                    Gesture current = helloHello.Keys.Where(x => helloHello[x] == helloHello.Values.Max()).First();
+                    Debug.WriteLine(String.Format("GONNA DO {0}", current));
+                    helloHello.Keys.ToList().ForEach(gesture => helloHello[gesture] = 0);
+                    handler(this, new GestureEventArgs() { Gesture = current, X = xx, Y = yy });
+                }
             }
 
         }
