@@ -15,5 +15,6 @@ namespace AnDeTruSprites
         public Texture2D Texture { get; set; }
 
         public bool withReversed { get; set; }
+        public int FPD { get; set; }
     }
 }

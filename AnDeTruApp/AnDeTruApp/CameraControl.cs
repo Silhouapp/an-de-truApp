@@ -107,7 +107,7 @@ namespace AnDeTruApp
                     if (handData != null)
                     {
                         PXCMHandData.JointData jointData;
-                        IHandData.QueryTrackedJoint((PXCMHandData.JointType)1, out jointData);
+                        IHandData.QueryTrackedJoint(PXCMHandData.JointType.JOINT_CENTER, out jointData);
                         nodes[i][1] = jointData;
                         //Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
                         arrX[i][nHandGestureCount[i]] = nodes[i][1].positionImage.x;

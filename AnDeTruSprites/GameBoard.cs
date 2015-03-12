@@ -59,7 +59,7 @@ namespace AnDeTruSprites
             {
                 Gesture = gesture,
                 Point = position,
-                Sprite = new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed)
+                Sprite = new AnimatedSprite(iTexture)
             };
         }
 
@@ -86,7 +86,7 @@ namespace AnDeTruSprites
                     TextureInfo iTexture = Gestures.DetailsFor(gv.Gesture).DeadTexture;
 
                     gv.Sprite =
-                        new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed, true, 0.2);
+                        new AnimatedSprite(iTexture, 0.2, true);
                     gv.IsDying = true;
                     gv.Sprite.FinishAnimationHandler += (sender, e) =>
                     {

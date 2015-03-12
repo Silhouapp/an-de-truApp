@@ -9,32 +9,25 @@ namespace AnDeTruSprites
 {
     public class AnimatedSprite
     {
-        public Texture2D Texture { get; set; }
         public Rectangle sourceRect { get; set; }
         public Rectangle destRect { get; set; }
-        private int Rows { get; set; }
-        private int Columns { get; set; }
         private int currentDraw;
         private int totalFrames;
-        private int fpd;
         private double scale;
-        private bool withReversed;
         private bool fixedScale;
         private bool runOnce;
 
+        public TextureInfo Info { get; set; }
+
         public event EventHandler<EventArgs> FinishAnimationHandler;
 
-        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw, bool withReversed, bool runOnce = false, double scale = 0)
+        public AnimatedSprite(TextureInfo ti, double scale = 0, bool runOnce = false)
         {
-            Texture = texture;
-            Rows = rows;
-            Columns = columns;
+            this.Info = ti;
             currentDraw = 1;
-            totalFrames = Rows * Columns;
-            fpd = framePerDraw;
+            totalFrames = Info.Rows * Info.Cols;
             fixedScale = scale != 0;
             this.scale = scale;
-            this.withReversed = withReversed;
             this.runOnce = runOnce;
         }
 
@@ -59,7 +52,7 @@ namespace AnDeTruSprites
 
             int currentFrame;
 
-            if (withReversed)
+            if (Info.withReversed)
             {
                 currentFrame = calcCurrentFrameWithReversed();
             }
@@ -68,10 +61,10 @@ namespace AnDeTruSprites
                 currentFrame = calcCurrentFrame();
             }
 
-            int width = Texture.Width / Columns;
-            int height = Texture.Height / Rows;
-            int row = (int)((float)currentFrame / (float)Columns);
-            int column = currentFrame % Columns;
+            int width = Info.Texture.Width / Info.Cols;
+            int height = Info.Texture.Height / Info.Rows;
+            int row = (int)((float)currentFrame / (float)Info.Cols);
+            int column = currentFrame % Info.Cols;
 
             sourceRect = new Rectangle(width * column, height * row, width, height);
             destRect = new Rectangle(0, 0, (int)(width * scale), (int)(height * scale));
@@ -80,14 +73,14 @@ namespace AnDeTruSprites
 
         private int calcCurrentFrameWithReversed()
         {
-            int currentFrame = currentDraw / fpd;
+            int currentFrame = currentDraw / Info.FPD;
 
             if (currentFrame > totalFrames - 1)
             {
                 currentFrame = (2 * (totalFrames - 1)) - currentFrame;
             }
 
-            if (currentDraw == ((totalFrames * 2) - 2) * fpd)
+            if (currentDraw == ((totalFrames * 2) - 2) * Info.FPD)
             {
                 currentDraw = 0;
             }
@@ -97,9 +90,9 @@ namespace AnDeTruSprites
 
         private int calcCurrentFrame()
         {
-            int currentFrame = currentDraw / fpd;
+            int currentFrame = currentDraw / Info.FPD;
 
-            if (currentDraw == totalFrames * fpd)
+            if (currentDraw == totalFrames * Info.FPD)
             {
                 currentDraw = 0;
             }

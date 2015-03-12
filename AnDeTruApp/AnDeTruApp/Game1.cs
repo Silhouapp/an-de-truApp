@@ -174,7 +174,7 @@ namespace AnDeTruApp
                 y -= destRect.Height / 2;
 
                 destRect.Offset(x, y);
-                spriteBatch.Draw(sprite.Texture, destRect, sprite.sourceRect, Color.White);
+                spriteBatch.Draw(sprite.Info.Texture, destRect, sprite.sourceRect, Color.White);
             }
             );
 

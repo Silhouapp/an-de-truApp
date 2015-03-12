@@ -56,14 +56,16 @@ namespace AnDeTruSprites
                             Texture = cm.Load<Texture2D>("Paper2048"),
                             Rows = 2,
                             Cols = 2,
-                            withReversed = true
+                            withReversed = true,
+                            FPD = 5
                         },
                         DeadTexture = new TextureInfo
                         {
                             Texture = cm.Load<Texture2D>("PaperExp"),
                             Rows = 2,
                             Cols = 2,
-                            withReversed = false
+                            withReversed = false,
+                            FPD = 7
                         }
                     }
                 ), new KeyValuePair<Gesture, SpriteViewDetail>(
@@ -75,14 +77,16 @@ namespace AnDeTruSprites
                             Texture = cm.Load<Texture2D>("Rock2048"),
                             Rows = 2,
                             Cols = 2,
-                            withReversed = true
+                            withReversed = true,
+                            FPD = 5
                         },
                         DeadTexture = new TextureInfo
                         {
                             Texture = cm.Load<Texture2D>("RockExp"),
                             Rows = 2,
                             Cols = 2,
-                            withReversed = false
+                            withReversed = false,
+                            FPD = 7
                         }
                     }
                 ), new KeyValuePair<Gesture, SpriteViewDetail>(
@@ -94,14 +98,16 @@ namespace AnDeTruSprites
                             Texture = cm.Load<Texture2D>("Scissors2048"),
                             Rows = 2,
                             Cols = 2,
-                            withReversed = true
+                            withReversed = true,
+                            FPD = 5
                         },
                         DeadTexture = new TextureInfo
                         {
                             Texture = cm.Load<Texture2D>("ScissorsExp"),
                             Rows = 2,
                             Cols = 2,
-                            withReversed = false
+                            withReversed = false,
+                            FPD = 7
                         }
                     }
                 )
