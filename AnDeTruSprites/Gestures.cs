@@ -51,7 +51,7 @@ namespace AnDeTruSprites
                     new Paper(), 
                     new SpriteViewDetail {
                         LiveTexture = cm.Load<Texture2D>("Paper2048"),
-                        DeadTexture = cm.Load<Texture2D>("Explosion"),
+                        DeadTexture = cm.Load<Texture2D>("explosjon3"),
                         Rows = 2,
                         Cols = 2
                     }
@@ -60,7 +60,7 @@ namespace AnDeTruSprites
                     new SpriteViewDetail
                     {
                         LiveTexture = cm.Load<Texture2D>("Rock2048"),
-                        DeadTexture = cm.Load<Texture2D>("Explosion"),
+                        DeadTexture = cm.Load<Texture2D>("explosjon3"),
                         Rows = 2,
                         Cols = 2
                     }
@@ -69,7 +69,7 @@ namespace AnDeTruSprites
                     new SpriteViewDetail
                     {
                         LiveTexture = cm.Load<Texture2D>("Scissors2048"),
-                        DeadTexture = cm.Load<Texture2D>("Explosion"),
+                        DeadTexture = cm.Load<Texture2D>("explosjon3"),
                         Rows = 2,
                         Cols = 2
                     }
