@@ -132,7 +132,7 @@ namespace AnDeTruApp
                 }
 
             }
-            if (nFrameCount >= 3)
+            if (nFrameCount >= 7)
             {
                 inzOutPut();
             }
@@ -191,7 +191,8 @@ namespace AnDeTruApp
             {
                 DominintGesture = new Paper();
             }
-            else
+            else if ((arrGestureTypeCount[ihand][(int)enmGesture.VShape] > arrGestureTypeCount[ihand][(int)enmGesture.Fist])
+                && (arrGestureTypeCount[ihand][(int)enmGesture.VShape] > arrGestureTypeCount[ihand][(int)enmGesture.SpreadHand]))
             {
                 DominintGesture = new Scissors();
             }
