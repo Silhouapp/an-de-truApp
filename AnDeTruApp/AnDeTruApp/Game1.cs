@@ -24,7 +24,7 @@ namespace AnDeTruApp
         SpriteBatch spriteBatch;
         Texture2D screenshotTexture;
         GameBoard _board;
-        List<RenderTarget2D> GamePhotos = new List<RenderTarget2D>();
+        List<Texture2D> GamePhotos = new List<Texture2D>();
         bool bIsDetectingHand = false;
         int nLastPhotoSecond = 0;
 
@@ -87,9 +87,6 @@ namespace AnDeTruApp
         {
             // Clean up
             this._camera.UnloadContent();
-
-            // Save Photos
-           // this.SavePhotos();
         }
 
         /// <summary>
@@ -117,24 +114,25 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            int secs = (int)gameTime.TotalGameTime.TotalSeconds;
-            if (secs != nLastPhotoSecond && secs % 5 == 0)
-            {
-                GraphicsDevice.PrepareScreenShot();
-            }
-
+            //int secs = (int)gameTime.TotalGameTime.TotalSeconds;
+            //if (secs != nLastPhotoSecond && secs % 7 == 0)
+            //{
+            //    this.spriteBatch.GraphicsDevice.PrepareScreenShot();
+            //}
+            
             // Must be the first method to be called.
             this.DrawBackground();
             this.DrawGestures();
 
             this.FillBox();
 
+            //if (secs != nLastPhotoSecond && secs % 7 == 0)
+            //{
+            //    nLastPhotoSecond = secs;
+            //    this.spriteBatch.GraphicsDevice.SaveScreenshot();
+            //}
+            
             base.Draw(gameTime);
-            if (secs != nLastPhotoSecond && secs % 5 == 0)
-            {
-                this.nLastPhotoSecond = secs;
-                GraphicsDevice.SaveScreenshot(); 
-            }
         }
 
         private void FillBox()
@@ -202,22 +200,6 @@ namespace AnDeTruApp
 
             // this line needs to be last of method
             this._camera.Draw();
-        }
-
-        private void SavePhotos()
-        {
-            
-            int PhotosIndex = 1;
-            foreach (RenderTarget2D photo in GamePhotos)
-            {
-                //@"/GamePhotos/" + DateTime.Today.ToString("hh:mm:ss") +
-                Stream st = new FileStream("./photo" + PhotosIndex + ".jpg", FileMode.Create);
-                photo.SaveAsJpeg(st, photo.Width, photo.Height);
-                PhotosIndex++;
-                photo.Dispose();
-            
-                st.Close();
-            } 
         }
 
         private void InitializeBackgroundTexture()

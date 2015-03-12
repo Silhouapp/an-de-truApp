@@ -35,7 +35,7 @@ public static class GraphicsDeviceExtensions
             //sets the rendertarget to a new RenderTarget2D for this Draw()
             device.SetRenderTarget(new RenderTarget2D(device,
                 device.PresentationParameters.BackBufferWidth,
-                device.PresentationParameters.BackBufferHeight));
+                device.PresentationParameters.BackBufferHeight, false, SurfaceFormat.Rg32, DepthFormat.None,0, RenderTargetUsage.PreserveContents));
         }
     }
 

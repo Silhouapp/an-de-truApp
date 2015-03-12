@@ -66,6 +66,7 @@ namespace AnDeTruSprites
         public bool throwGesture(Gesture gesture, Point position)
         {
             bool result = false;
+            if (position.OneDimensional >= this.gestures.Count) return false;
             GestureView gestureView = this.gestures[position.OneDimensional];
             if (gestureView != null && !gestureView.IsDying)
             {
