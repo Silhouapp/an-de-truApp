@@ -54,11 +54,11 @@ namespace AnDeTruSprites
 
         public void addGestureViewIn(Gesture gesture, Point position)
         {
-            SpriteViewDetail svd = Gestures.DetailsFor(gesture);
+            TextureInfo iTexture = Gestures.DetailsFor(gesture).AliveTexture;
             gestures[position.OneDimensional] = new GestureView {
                 Gesture = gesture,
                 Point = position,
-                Sprite = new AnimatedSprite(svd.LiveTexture, svd.Rows, svd.Cols, 5, true)
+                Sprite = new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed)
             };
         }
 
@@ -81,10 +81,10 @@ namespace AnDeTruSprites
                     this.Score++;
 
                     var gv = this.gestures[position.OneDimensional];
-                    SpriteViewDetail svd = Gestures.DetailsFor(gv.Gesture);
+                    TextureInfo iTexture = Gestures.DetailsFor(gv.Gesture).DeadTexture;
 
                     gv.Sprite = 
-                        new AnimatedSprite(svd.DeadTexture, svd.Rows, svd.Cols, 5, false);
+                        new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed);
                 }
             }
 
