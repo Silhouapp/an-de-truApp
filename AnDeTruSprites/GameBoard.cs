@@ -58,7 +58,7 @@ namespace AnDeTruSprites
             gestures[position.OneDimensional] = new GestureView {
                 Gesture = gesture,
                 Point = position,
-                Sprite = new AnimatedSprite(svd.Texture, svd.Rows, svd.Cols, 5, true)
+                Sprite = new AnimatedSprite(svd.LiveTexture, svd.Rows, svd.Cols, 5, true)
             };
         }
 
@@ -79,7 +79,12 @@ namespace AnDeTruSprites
                 {
                     result = true;
                     this.Score++;
-                    this.gestures[position.OneDimensional] = null;
+
+                    var gv = this.gestures[position.OneDimensional];
+                    SpriteViewDetail svd = Gestures.DetailsFor(gv.Gesture);
+
+                    gv.Sprite = 
+                        new AnimatedSprite(svd.DeadTexture, svd.Rows, svd.Cols, 5, false);
                 }
             }
 

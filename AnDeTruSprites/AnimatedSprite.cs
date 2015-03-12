@@ -45,7 +45,7 @@ namespace AnDeTruSprites
             }
             else
             {
-                currentFrame = 0;
+                currentFrame = calcCurrentFrame();
             }
 
             int width = Texture.Width / Columns;
@@ -67,6 +67,18 @@ namespace AnDeTruSprites
             }
 
             if (currentDraw == ((totalFrames * 2) - 2) * fpd)
+            {
+                currentDraw = 0;
+            }
+
+            return currentFrame;
+        }
+
+        private int calcCurrentFrame()
+        {
+            int currentFrame = currentDraw / fpd;
+
+            if (currentDraw == totalFrames * fpd)
             {
                 currentDraw = 0;
             }

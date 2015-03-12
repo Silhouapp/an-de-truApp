@@ -50,7 +50,8 @@ namespace AnDeTruSprites
                 new KeyValuePair<Gesture, SpriteViewDetail> (
                     new Paper(), 
                     new SpriteViewDetail {
-                        Texture = cm.Load<Texture2D>("Paper2048"),
+                        LiveTexture = cm.Load<Texture2D>("Paper2048"),
+                        DeadTexture = cm.Load<Texture2D>("Explosion"),
                         Rows = 2,
                         Cols = 2
                     }
@@ -58,7 +59,8 @@ namespace AnDeTruSprites
                     new Rock(),
                     new SpriteViewDetail
                     {
-                        Texture = cm.Load<Texture2D>("Rock2048"),
+                        LiveTexture = cm.Load<Texture2D>("Rock2048"),
+                        DeadTexture = cm.Load<Texture2D>("Explosion"),
                         Rows = 2,
                         Cols = 2
                     }
@@ -66,7 +68,8 @@ namespace AnDeTruSprites
                     new Scissors(),
                     new SpriteViewDetail
                     {
-                        Texture = cm.Load<Texture2D>("Scissors2048"),
+                        LiveTexture = cm.Load<Texture2D>("Scissors2048"),
+                        DeadTexture = cm.Load<Texture2D>("Explosion"),
                         Rows = 2,
                         Cols = 2
                     }

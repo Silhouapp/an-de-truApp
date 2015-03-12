@@ -27,6 +27,7 @@ namespace AnDeTruApp
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferMultiSampling = true; // Maybe this is good, maybe not...
             Content.RootDirectory = "Content";
             
             # if !DEBUG
