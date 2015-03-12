@@ -119,6 +119,7 @@ namespace AnDeTruApp
             var colWidth = GraphicsDevice.Viewport.Bounds.Width / 3;
             var rowHeight = GraphicsDevice.Viewport.Bounds.Height / 3;
 
+            this.PaintByHandPosition();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
             //this._board.CurrentGestureViews.ForEach(g => spriteBatch.Draw(g.Sprite.Texture, g.Sprite.destRect, g.Sprite.sourceRect, Color.Transparent));
@@ -176,7 +177,7 @@ namespace AnDeTruApp
             int width = GraphicsDevice.PresentationParameters.Bounds.Width;
 
             Color color = Color.White;
-            color.A = 80;
+            color.A = 60;
 
             Texture2D texture1px = new Texture2D(graphics.GraphicsDevice, 1, 1);
             texture1px.SetData(new Color[] { Color.White });
@@ -227,7 +228,20 @@ namespace AnDeTruApp
 
         private void PaintByHandPosition()
         {
-            int x = this._camera.HandLocation.X;
+            int boundHeight;
+            int boundWidth;
+
+            if (this._camera.HandLocation.X != 0 && this._camera.HandLocation.Y != 0)
+            {
+                boundHeight = this._camera.SpriteBitmap.Height;
+                boundWidth = this._camera.SpriteBitmap.Width;
+
+                int x = (int)((boundWidth - (this._camera.HandLocation.X + 80)) / (boundWidth / 3));
+                int y = (int)((this._camera.HandLocation.Y) / (boundHeight / 3));
+                int i = new AnDeTruSprites.Point { X = x, Y = y }.OneDimensional;
+
+                this.EmphesizeSquareByNumber(i, Color.Green);
+            }
         }
     }
 }
