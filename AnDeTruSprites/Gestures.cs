@@ -60,9 +60,9 @@ namespace AnDeTruSprites
                         },
                         DeadTexture = new TextureInfo
                         {
-                            Texture = cm.Load<Texture2D>("explosjon3"),
-                            Rows = 4,
-                            Cols = 4,
+                            Texture = cm.Load<Texture2D>("PaperExp"),
+                            Rows = 2,
+                            Cols = 2,
                             withReversed = false
                         }
                     }
@@ -79,9 +79,9 @@ namespace AnDeTruSprites
                         },
                         DeadTexture = new TextureInfo
                         {
-                            Texture = cm.Load<Texture2D>("explosjon3"),
-                            Rows = 4,
-                            Cols = 4,
+                            Texture = cm.Load<Texture2D>("RockExp"),
+                            Rows = 2,
+                            Cols = 2,
                             withReversed = false
                         }
                     }
@@ -98,9 +98,9 @@ namespace AnDeTruSprites
                         },
                         DeadTexture = new TextureInfo
                         {
-                            Texture = cm.Load<Texture2D>("explosjon3"),
-                            Rows = 4,
-                            Cols = 4,
+                            Texture = cm.Load<Texture2D>("ScissorsExp"),
+                            Rows = 2,
+                            Cols = 2,
                             withReversed = false
                         }
                     }
