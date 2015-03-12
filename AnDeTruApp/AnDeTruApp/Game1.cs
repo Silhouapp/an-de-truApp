@@ -22,6 +22,7 @@ namespace AnDeTruApp
         CameraControl _camera;
         SpriteBatch spriteBatch;
         GameBoard _board;
+        bool bIsDetectingHand = false;
 
         public Game1()
         {
@@ -53,6 +54,7 @@ namespace AnDeTruApp
             var colWidth = GraphicsDevice.Viewport.Bounds.Width / 3;
             var rowHeight = GraphicsDevice.Viewport.Bounds.Height / 3;
             this._board.throwGesture(e.Gesture, ConversionServices.FromLocationToIndex(e.X, e.Y, colWidth,rowHeight));
+            this.bIsDetectingHand = true;
         }
 
         /// <summary>
@@ -109,17 +111,31 @@ namespace AnDeTruApp
             this.DrawBackground();
             this.DrawGestures();
 
-            PaintByHandPosition();
+            this.FillBox();
 
             base.Draw(gameTime);
+        }
+
+        private void FillBox()
+        {
+            if (this.bIsDetectingHand)
+            {
+                int height = GraphicsDevice.PresentationParameters.Bounds.Height / 3;
+                int width = GraphicsDevice.PresentationParameters.Bounds.Width / 3;
+
+                this.EmphesizeSquareByNumber(ConversionServices.FromLocationToIndex(this._camera.HandLocation.X + 80,
+                                                                                    this._camera.HandLocation.Y,
+                                                                                    width,
+                                                                                    height).OneDimensional,
+                                             Color.Green);
+                this.bIsDetectingHand = false;
+            }
         }
 
         private void DrawGestures()
         {
             var colWidth = GraphicsDevice.Viewport.Bounds.Width / 3;
             var rowHeight = GraphicsDevice.Viewport.Bounds.Height / 3;
-
-            this.PaintByHandPosition();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
             //this._board.CurrentGestureViews.ForEach(g => spriteBatch.Draw(g.Sprite.Texture, g.Sprite.destRect, g.Sprite.sourceRect, Color.Transparent));
@@ -203,7 +219,7 @@ namespace AnDeTruApp
         /// <param name="squareId">a number from 0 - 8</param>
         private void EmphesizeSquareByNumber(int squareId, Color color)
         {
-            if (squareId != -1)
+            if (squareId != -1 && this._camera.HandLocation.X != 0 && this._camera.HandLocation.Y != 0)
             {
                 color.A = 60;
 
