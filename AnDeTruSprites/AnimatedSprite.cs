@@ -24,7 +24,7 @@ namespace AnDeTruSprites
 
         public event EventHandler<EventArgs> FinishAnimationHandler;
 
-        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw, bool withReversed, bool runOnce = false, int scale = 0)
+        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw, bool withReversed, bool runOnce = false, double scale = 0)
         {
             Texture = texture;
             Rows = rows;

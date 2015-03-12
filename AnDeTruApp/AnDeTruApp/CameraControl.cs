@@ -12,10 +12,16 @@ using Microsoft.Xna.Framework.Media;
 using System.Drawing;
 using System.Diagnostics;
 using AnDeTruSprites;
+using System.Timers;
 
 namespace AnDeTruApp
 {
-
+    enum enmGesture
+    {
+        Fist,
+        SpreadHand,
+        VShape
+    }
     public class GestureEventArgs : EventArgs
     {
         public Gesture Gesture { get; set; }
@@ -40,7 +46,11 @@ namespace AnDeTruApp
         PXCMHandData handData;
 
         public event EventHandler<GestureEventArgs> GestureCapturedHandler;
-
+        private float[][] arrX;
+        private float[][] arrY;
+        private int[] arrGestureTypeCount;
+        private int nFrameCount = 0;
+        private int[] nHandGestureCount;
         public CameraControl(GraphicsDevice d)
         {
             // Save the graphic device
@@ -69,8 +79,14 @@ namespace AnDeTruApp
             handConfiguration.EnableTrackedJoints(true);
             handConfiguration.SubscribeGesture(OnFiredGesture);
             handConfiguration.ApplyChanges();
-
-
+            arrX = new float[2][];
+            arrY = new float[2][];
+            arrX[0] = new float[60];
+            arrY[0] = new float[60];
+            arrX[1] = new float[60];
+            arrY[1] = new float[60];
+            nHandGestureCount = new int[2];
+            arrGestureTypeCount = new int[3];
             handler.onNewSample = OnNewSample;
             handler.onModuleProcessedFrame = new PXCMSenseManager.Handler.OnModuleProcessedFrameDelegate(onProcessedFrame);
 
@@ -91,27 +107,86 @@ namespace AnDeTruApp
                         PXCMHandData.JointData jointData;
                         IHandData.QueryTrackedJoint((PXCMHandData.JointType)1, out jointData);
                         nodes[i][1] = jointData;
-                        Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
-                        this.HandLocation.X = (int)nodes[i][1].positionImage.x;
-                        this.HandLocation.Y = (int)nodes[i][1].positionImage.y;
+                        //Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
+                        arrX[i][nHandGestureCount[i]] = nodes[i][1].positionImage.x;
+                        arrY[i][nHandGestureCount[i]] = nodes[i][1].positionImage.y;
+                        nHandGestureCount[i]++;
                     }
                 }
-            }
+                PXCMHandData.GestureData GestureData;//D
+                
+                if (handData.IsGestureFired("fist", out GestureData))//D
+                {
+                    arrGestureTypeCount[(int)enmGesture.Fist]++;
+                }
+                else if (handData.IsGestureFired("spreadfingers", out GestureData))//D
+                {
+                    arrGestureTypeCount[(int)enmGesture.SpreadHand]++;
+                }
+                else if (handData.IsGestureFired("v_sign", out GestureData))//D
+                {
+                    arrGestureTypeCount[(int)enmGesture.VShape]++;
+                }
 
-            // FIX: No need to check ifGestureFired because we are in OnFiredGesture and already ave this data.
-            Gesture g = null;
-            if (gestureData.name == "fist") g = new Rock();
-            if (gestureData.name == "spreadfingers") g = new Paper();
-            if (gestureData.name == "v_sign") g = new Scissors();
+
+            }
+            if (nFrameCount >= 60)
+            {
+                inzOutPut();
+            }
+        }
+
+        private void inzOutPut()
+        {
+            Gesture g = calcDominintGesture();
+            int nXMedian = (int)calcMedian(arrX[0], nHandGestureCount[0]);
+            int nYMedian = (int)calcMedian(arrY[0], nHandGestureCount[0]);
 
             EventHandler<GestureEventArgs> handler = GestureCapturedHandler;
             if (handler != null && g != null)
             {
-                handler(this, new GestureEventArgs() { Gesture = g, X = this.HandLocation.X, Y = this.HandLocation.Y });
+                handler(this, new GestureEventArgs() { Gesture = g, X = nXMedian, Y = nYMedian });
             }
-
+            if(handData.QueryNumberOfHands() == 2)
+            {
+                nXMedian = (int)calcMedian(arrX[1], nHandGestureCount[1]);
+                nYMedian = (int)calcMedian(arrY[1], nHandGestureCount[1]);
+                
+                if (handler != null && g != null)
+                {
+                    handler(this, new GestureEventArgs() { Gesture = g, X = nXMedian, Y = nYMedian });
+                }
+            }
+            arrGestureTypeCount = new int[3];
+            nHandGestureCount = new int[2];
+            nFrameCount = 0;
         }
 
+        private float calcMedian(float[] array,int HandGestureCount)
+        {
+            Array.Sort(array, 0, HandGestureCount);
+            return array[HandGestureCount / 2]; ;
+        }
+
+        private Gesture calcDominintGesture()
+        {
+            Gesture DominintGesture = null;
+            if((arrGestureTypeCount[(int)enmGesture.Fist] > arrGestureTypeCount[(int)enmGesture.SpreadHand]) 
+                && (arrGestureTypeCount[(int)enmGesture.Fist] > arrGestureTypeCount[(int)enmGesture.VShape]))
+            {
+                DominintGesture = new Rock();
+            }
+            else if((arrGestureTypeCount[(int)enmGesture.SpreadHand] > arrGestureTypeCount[(int)enmGesture.Fist]) 
+                && (arrGestureTypeCount[(int)enmGesture.SpreadHand] > arrGestureTypeCount[(int)enmGesture.VShape]))
+            {
+                DominintGesture = new Paper();
+            }
+            else
+            {
+                DominintGesture = new Scissors();
+            }
+            return DominintGesture;
+        }
         private pxcmStatus onProcessedFrame(int mid, PXCMBase module, PXCMCapture.Sample sample)
         {
             if (mid == PXCMHandModule.CUID)
@@ -125,7 +200,7 @@ namespace AnDeTruApp
 
         pxcmStatus OnNewSample(int mid, PXCMCapture.Sample sample)
         {
-
+            nFrameCount++;
             // work on sample.color
             PXCMImage.ImageData data;
             pxcmStatus stt = sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ,
@@ -152,7 +227,7 @@ namespace AnDeTruApp
         }
 
         public void Update()
-        {
+        {           
             this.SenseManager.AcquireFrame(true);
         }
 
