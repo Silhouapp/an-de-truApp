@@ -130,7 +130,7 @@ namespace AnDeTruApp
 
 
             }
-            if (nFrameCount >= 60)
+            if (nFrameCount >= 10)
             {
                 inzOutPut();
             }
@@ -154,6 +154,8 @@ namespace AnDeTruApp
                 
                 if (handler != null && g != null)
                 {
+                    this.HandLocation.X = nXMedian;
+                    this.HandLocation.Y = nYMedian;
                     handler(this, new GestureEventArgs() { Gesture = g, X = nXMedian, Y = nYMedian });
                 }
             }
