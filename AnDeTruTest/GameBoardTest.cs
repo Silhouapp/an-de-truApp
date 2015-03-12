@@ -50,7 +50,7 @@ namespace AnDeTruTest
             Assert.IsTrue(gameboard.throwGesture(new Rock(), where));
             Assert.AreEqual(1, gameboard.Score);
             Assert.IsFalse(gameboard.throwGesture(new Scissors(), where));
-            Assert.AreEqual(0, gameboard.Score);
+            Assert.AreEqual(1, gameboard.Score);
 
         }
 

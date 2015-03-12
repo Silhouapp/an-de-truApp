@@ -83,8 +83,6 @@ namespace AnDeTruSprites
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine(String.Format("{0} - {1}", gesture.GetType().Name, result));
-
             return result;
         }
 
