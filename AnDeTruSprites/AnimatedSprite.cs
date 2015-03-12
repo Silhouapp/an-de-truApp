@@ -14,22 +14,22 @@ namespace AnDeTruSprites
         public Rectangle destRect { get; set; }
         private int Rows { get; set; }
         private int Columns { get; set; }
-        private int currentFrame;
         private int currentDraw;
         private int totalFrames;
         private int fpd;
         private double scale;
+        private bool withReversed;
 
-        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw)
+        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw, bool withReversed)
         {
             Texture = texture;
             Rows = rows;
             Columns = columns;
-            currentFrame = 0;
             currentDraw = 0;
             totalFrames = Rows * Columns;
             fpd = framePerDraw;
             scale = 0;
+            this.withReversed = withReversed;
         }
 
         public void Update()
@@ -37,7 +37,29 @@ namespace AnDeTruSprites
             currentDraw++;
             scale = Math.Min(0.2, scale + 0.0005);
 
-            currentFrame = currentDraw / fpd;
+            int currentFrame;
+
+            if (withReversed)
+            {
+                currentFrame = calcCurrentFrameWithReversed();
+            }
+            else
+            {
+                currentFrame = 0;
+            }
+
+            int width = Texture.Width / Columns;
+            int height = Texture.Height / Rows;
+            int row = (int)((float)currentFrame / (float)Columns);
+            int column = currentFrame % Columns;
+
+            sourceRect = new Rectangle(width * column, height * row, width, height);
+            destRect = new Rectangle(0, 0, (int)(width * scale), (int)(height * scale));
+        }
+
+        private int calcCurrentFrameWithReversed()
+        {
+            int currentFrame = currentDraw / fpd;
 
             if (currentFrame > totalFrames - 1)
             {
@@ -49,13 +71,8 @@ namespace AnDeTruSprites
                 currentDraw = 0;
             }
 
-            int width = Texture.Width / Columns;
-            int height = Texture.Height / Rows;
-            int row = (int)((float)currentFrame / (float)Columns);
-            int column = currentFrame % Columns;
-
-            sourceRect = new Rectangle(width * column, height * row, width, height);
-            destRect = new Rectangle(0, 0, (int)(width * scale), (int)(height * scale));
+            return currentFrame;
         }
+       
     }
 }

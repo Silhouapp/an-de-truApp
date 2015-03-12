@@ -58,7 +58,7 @@ namespace AnDeTruSprites
             gestures[position.OneDimensional] = new GestureView {
                 Gesture = gesture,
                 Point = position,
-                Sprite = new AnimatedSprite(svd.Texture, svd.Rows, svd.Cols, 5)
+                Sprite = new AnimatedSprite(svd.Texture, svd.Rows, svd.Cols, 5, true)
             };
         }
 
