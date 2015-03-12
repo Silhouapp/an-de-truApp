@@ -241,23 +241,5 @@ namespace AnDeTruApp
                 spriteBatch.End();
             }
         }
-
-        private void PaintByHandPosition()
-        {
-            int boundHeight;
-            int boundWidth;
-
-            if (this._camera.HandLocation.X != 0 && this._camera.HandLocation.Y != 0)
-            {
-                boundHeight = this._camera.SpriteBitmap.Height;
-                boundWidth = this._camera.SpriteBitmap.Width;
-
-                int x = (int)((boundWidth - (this._camera.HandLocation.X + 80)) / (boundWidth / 3));
-                int y = (int)((this._camera.HandLocation.Y) / (boundHeight / 3));
-                int i = new AnDeTruSprites.Point { X = x, Y = y }.OneDimensional;
-
-                this.EmphesizeSquareByNumber(i, Color.Green);
-            }
-        }
     }
 }
