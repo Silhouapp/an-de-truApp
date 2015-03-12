@@ -35,6 +35,7 @@ namespace AnDeTruSprites
             fixedScale = scale != 0;
             this.scale = scale;
             this.withReversed = withReversed;
+            this.runOnce = runOnce;
         }
 
         public void Update()
