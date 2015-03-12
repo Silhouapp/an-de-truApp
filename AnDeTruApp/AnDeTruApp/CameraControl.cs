@@ -22,6 +22,7 @@ namespace AnDeTruApp
         public int X { get; set; }
         public int Y { get; set; }
     }
+
     public class CameraControl
     {
         private Size captureSize = new Size(848, 480);
@@ -96,25 +97,12 @@ namespace AnDeTruApp
                     }
                 }
             }
-            PXCMHandData.GestureData GestureData;//D
+
+            // FIX: No need to check ifGestureFired because we are in OnFiredGesture and already ave this data.
             Gesture g = null;
-            if (handData.IsGestureFired("fist", out GestureData))//D
-            {
-                g = new Rock();
-                //iROCK++;
-            }
-
-            if (handData.IsGestureFired("spreadfingers", out GestureData))//D
-            {
-                g = new Paper();
-                //iPaper++;
-            }
-
-            if (handData.IsGestureFired("v_sign", out GestureData))//D
-            {
-                g = new Scissors();
-                //iScissor++;
-            }
+            if (gestureData.name == "fist") g = new Rock();
+            if (gestureData.name == "spreadfingers") g = new Paper();
+            if (gestureData.name == "v_sign") g = new Scissors();
 
             EventHandler<GestureEventArgs> handler = GestureCapturedHandler;
             if (handler != null && g != null)
@@ -165,7 +153,7 @@ namespace AnDeTruApp
 
         public void Update()
         {
-            this.SenseManager.AcquireFrame(false);
+            this.SenseManager.AcquireFrame(true);
         }
 
         /// <summary>
