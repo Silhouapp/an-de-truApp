@@ -10,7 +10,7 @@ namespace AnDeTruSprites
     public class AnimatedSprite
     {
         public Texture2D Texture { get; set; }
-        public Rectangle sourceRect{ get; set; }
+        public Rectangle sourceRect { get; set; }
         public Rectangle destRect { get; set; }
         private int Rows { get; set; }
         private int Columns { get; set; }
@@ -19,8 +19,9 @@ namespace AnDeTruSprites
         private int fpd;
         private double scale;
         private bool withReversed;
+        private bool fixedScale;
 
-        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw, bool withReversed)
+        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw, bool withReversed, int scale = 0)
         {
             Texture = texture;
             Rows = rows;
@@ -28,14 +29,18 @@ namespace AnDeTruSprites
             currentDraw = 0;
             totalFrames = Rows * Columns;
             fpd = framePerDraw;
-            scale = 0;
+            fixedScale = scale != 0;
+            this.scale = scale;
             this.withReversed = withReversed;
         }
 
         public void Update()
         {
             currentDraw++;
-            scale = Math.Min(0.2, scale + 0.0005);
+            if (!fixedScale)
+            {
+                scale = Math.Min(0.2, scale + 0.0005);
+            }
 
             int currentFrame;
 
@@ -85,6 +90,6 @@ namespace AnDeTruSprites
 
             return currentFrame;
         }
-       
+
     }
 }
