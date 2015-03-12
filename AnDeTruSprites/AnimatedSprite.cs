@@ -20,8 +20,11 @@ namespace AnDeTruSprites
         private double scale;
         private bool withReversed;
         private bool fixedScale;
+        private bool runOnce;
 
-        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw, bool withReversed, int scale = 0)
+        public event EventHandler<EventArgs> FinishAnimationHandler;
+
+        public AnimatedSprite(Texture2D texture, int rows, int columns, int framePerDraw, bool withReversed, bool runOnce = false, int scale = 0)
         {
             Texture = texture;
             Rows = rows;
@@ -37,6 +40,15 @@ namespace AnDeTruSprites
         public void Update()
         {
             currentDraw++;
+
+            if (runOnce && currentDraw == 0)
+            {
+                var handler = FinishAnimationHandler;
+                if (handler != null)
+                {
+                    handler(this, new EventArgs());
+                }
+            }
             if (!fixedScale)
             {
                 scale = Math.Min(0.2, scale + 0.0005);
@@ -60,6 +72,7 @@ namespace AnDeTruSprites
 
             sourceRect = new Rectangle(width * column, height * row, width, height);
             destRect = new Rectangle(0, 0, (int)(width * scale), (int)(height * scale));
+            
         }
 
         private int calcCurrentFrameWithReversed()

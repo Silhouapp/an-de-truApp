@@ -97,7 +97,7 @@ namespace AnDeTruSprites
                     TextureInfo iTexture = Gestures.DetailsFor(gv.Gesture).DeadTexture;
 
                     gv.Sprite =
-                        new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed, 3);
+                        new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed, true, 3);
                 }
             }
 
