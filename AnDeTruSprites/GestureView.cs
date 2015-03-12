@@ -9,7 +9,7 @@ namespace AnDeTruSprites
     {
         public Gesture Gesture { get; set; }
         public Point Point { get; set; }
-
+        public bool IsDying { get; set; }
         public AnimatedSprite Sprite { get; set; }
     }
 }

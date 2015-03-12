@@ -29,7 +29,7 @@ namespace AnDeTruSprites
             Texture = texture;
             Rows = rows;
             Columns = columns;
-            currentDraw = 0;
+            currentDraw = 1;
             totalFrames = Rows * Columns;
             fpd = framePerDraw;
             fixedScale = scale != 0;
@@ -40,7 +40,6 @@ namespace AnDeTruSprites
 
         public void Update()
         {
-            currentDraw++;
 
             if (runOnce && currentDraw == 0)
             {
@@ -50,6 +49,9 @@ namespace AnDeTruSprites
                     handler(this, new EventArgs());
                 }
             }
+
+            currentDraw++;
+
             if (!fixedScale)
             {
                 scale = Math.Min(0.2, scale + 0.0005);

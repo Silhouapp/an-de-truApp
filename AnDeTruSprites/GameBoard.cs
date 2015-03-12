@@ -67,7 +67,7 @@ namespace AnDeTruSprites
         {
             bool result = false;
             GestureView gestureView = this.gestures[position.OneDimensional];
-            if (gestureView != null)
+            if (gestureView != null && !gestureView.IsDying)
             {
                 Gesture gestureStored = this.gestures[position.OneDimensional].Gesture;
 
@@ -81,23 +81,16 @@ namespace AnDeTruSprites
                     result = true;
                     this.Score++;
 
-                    var timer = new System.Timers.Timer
-                    {
-                        AutoReset = false,
-                        Interval = 500,
-                        Enabled = true
-                    };
-                    timer.Elapsed += (source, e) =>
-                    {
-                        this.gestures[position.OneDimensional] = null;
-                        timer.Dispose();
-                    };
-
                     var gv = this.gestures[position.OneDimensional];
                     TextureInfo iTexture = Gestures.DetailsFor(gv.Gesture).DeadTexture;
 
                     gv.Sprite =
                         new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed, true, 3);
+                    gv.IsDying = true;
+                    gv.Sprite.FinishAnimationHandler += (sender, e) =>
+                    {
+                        this.gestures[position.OneDimensional] = null;
+                    };
                 }
             }
 
