@@ -54,11 +54,12 @@ namespace AnDeTruSprites
 
         public void addGestureViewIn(Gesture gesture, Point position)
         {
-            SpriteViewDetail svd = Gestures.DetailsFor(gesture);
-            gestures[position.OneDimensional] = new GestureView {
+            TextureInfo iTexture = Gestures.DetailsFor(gesture).AliveTexture;
+            gestures[position.OneDimensional] = new GestureView
+            {
                 Gesture = gesture,
                 Point = position,
-                Sprite = new AnimatedSprite(svd.Texture, svd.Rows, svd.Cols, 5)
+                Sprite = new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed)
             };
         }
 
@@ -66,7 +67,7 @@ namespace AnDeTruSprites
         {
             bool result = false;
             GestureView gestureView = this.gestures[position.OneDimensional];
-            if (gestureView != null)
+            if (gestureView != null && !gestureView.IsDying)
             {
                 Gesture gestureStored = this.gestures[position.OneDimensional].Gesture;
 
@@ -79,11 +80,19 @@ namespace AnDeTruSprites
                 {
                     result = true;
                     this.Score++;
-                    this.gestures[position.OneDimensional] = null;
+
+                    var gv = this.gestures[position.OneDimensional];
+                    TextureInfo iTexture = Gestures.DetailsFor(gv.Gesture).DeadTexture;
+
+                    gv.Sprite =
+                        new AnimatedSprite(iTexture.Texture, iTexture.Rows, iTexture.Cols, 5, iTexture.withReversed, true, 3);
+                    gv.IsDying = true;
+                    gv.Sprite.FinishAnimationHandler += (sender, e) =>
+                    {
+                        this.gestures[position.OneDimensional] = null;
+                    };
                 }
             }
-
-            System.Diagnostics.Debug.WriteLine(String.Format("{0} - {1}", gesture.GetType().Name, result));
 
             return result;
         }

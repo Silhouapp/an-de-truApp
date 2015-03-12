@@ -28,6 +28,7 @@ namespace AnDeTruApp
         public int X { get; set; }
         public int Y { get; set; }
     }
+
     public class CameraControl
     {
         private Size captureSize = new Size(848, 480);
@@ -146,7 +147,6 @@ namespace AnDeTruApp
             {
                 handler(this, new GestureEventArgs() { Gesture = g, X = nXMedian, Y = nYMedian });
             }
-
             if(handData.QueryNumberOfHands() == 2)
             {
                 nXMedian = (int)calcMedian(arrX[1], nHandGestureCount[1]);
@@ -228,7 +228,7 @@ namespace AnDeTruApp
 
         public void Update()
         {           
-            this.SenseManager.AcquireFrame(false);
+            this.SenseManager.AcquireFrame(true);
         }
 
         /// <summary>

@@ -47,7 +47,7 @@ namespace AnDeTruApp
 
         public static AnDeTruSprites.Point FromLocationToIndex(int x, int y, int colWidth, int rowHeight)
         {
-            int i = x / colWidth;
+            int i = (848-x - 70) / colWidth;
             int j = y / rowHeight;
 
             return new AnDeTruSprites.Point(i, j);

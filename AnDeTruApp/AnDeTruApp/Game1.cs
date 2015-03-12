@@ -22,10 +22,12 @@ namespace AnDeTruApp
         CameraControl _camera;
         SpriteBatch spriteBatch;
         GameBoard _board;
+        bool bIsDetectingHand = false;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferMultiSampling = true; // Maybe this is good, maybe not...
             Content.RootDirectory = "Content";
             
             # if !DEBUG
@@ -53,6 +55,7 @@ namespace AnDeTruApp
             var colWidth = GraphicsDevice.Viewport.Bounds.Width / 3;
             var rowHeight = GraphicsDevice.Viewport.Bounds.Height / 3;
             this._board.throwGesture(e.Gesture, ConversionServices.FromLocationToIndex(e.X, e.Y, colWidth,rowHeight));
+            this.bIsDetectingHand = true;
         }
 
         /// <summary>
@@ -109,17 +112,31 @@ namespace AnDeTruApp
             this.DrawBackground();
             this.DrawGestures();
 
-            PaintByHandPosition();
+            this.FillBox();
 
             base.Draw(gameTime);
+        }
+
+        private void FillBox()
+        {
+            if (this.bIsDetectingHand)
+            {
+                int height = GraphicsDevice.PresentationParameters.Bounds.Height / 3;
+                int width = GraphicsDevice.PresentationParameters.Bounds.Width / 3;
+
+                this.EmphesizeSquareByNumber(ConversionServices.FromLocationToIndex(this._camera.HandLocation.X + 80,
+                                                                                    this._camera.HandLocation.Y,
+                                                                                    width,
+                                                                                    height).OneDimensional,
+                                             Color.Green);
+                this.bIsDetectingHand = false;
+            }
         }
 
         private void DrawGestures()
         {
             var colWidth = GraphicsDevice.Viewport.Bounds.Width / 3;
             var rowHeight = GraphicsDevice.Viewport.Bounds.Height / 3;
-
-            this.PaintByHandPosition();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
             //this._board.CurrentGestureViews.ForEach(g => spriteBatch.Draw(g.Sprite.Texture, g.Sprite.destRect, g.Sprite.sourceRect, Color.Transparent));
@@ -203,7 +220,7 @@ namespace AnDeTruApp
         /// <param name="squareId">a number from 0 - 8</param>
         private void EmphesizeSquareByNumber(int squareId, Color color)
         {
-            if (squareId != -1)
+            if (squareId != -1 && this._camera.HandLocation.X != 0 && this._camera.HandLocation.Y != 0)
             {
                 color.A = 60;
 
@@ -223,24 +240,6 @@ namespace AnDeTruApp
                 Rectangle rectangle = new Rectangle(offsetX + 4, offsetY + 4, width, height);
                 spriteBatch.Draw(texture1px, rectangle, color);
                 spriteBatch.End();
-            }
-        }
-
-        private void PaintByHandPosition()
-        {
-            int boundHeight;
-            int boundWidth;
-
-            if (this._camera.HandLocation.X != 0 && this._camera.HandLocation.Y != 0)
-            {
-                boundHeight = this._camera.SpriteBitmap.Height;
-                boundWidth = this._camera.SpriteBitmap.Width;
-
-                int x = (int)((boundWidth - (this._camera.HandLocation.X + 80)) / (boundWidth / 3));
-                int y = (int)((this._camera.HandLocation.Y) / (boundHeight / 3));
-                int i = new AnDeTruSprites.Point { X = x, Y = y }.OneDimensional;
-
-                this.EmphesizeSquareByNumber(i, Color.Green);
             }
         }
     }
