@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 using AnDeTruSprites;
+using System.IO;
 
 namespace AnDeTruApp
 {
@@ -21,8 +22,11 @@ namespace AnDeTruApp
         GraphicsDeviceManager graphics;
         CameraControl _camera;
         SpriteBatch spriteBatch;
+        Texture2D screenshotTexture;
         GameBoard _board;
+        List<RenderTarget2D> GamePhotos = new List<RenderTarget2D>();
         bool bIsDetectingHand = false;
+        int nLastPhotoSecond = 0;
 
         public Game1()
         {
@@ -66,10 +70,12 @@ namespace AnDeTruApp
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            screenshotTexture = new Texture2D(GraphicsDevice, 
+                        GraphicsDevice.PresentationParameters.Bounds.Width,
+                        GraphicsDevice.PresentationParameters.Bounds.Height);
 
             Gestures.InitGestures(this.Content);
             this._board.addGestureView();
-
         }
 
 
@@ -81,6 +87,9 @@ namespace AnDeTruApp
         {
             // Clean up
             this._camera.UnloadContent();
+
+            // Save Photos
+           // this.SavePhotos();
         }
 
         /// <summary>
@@ -108,6 +117,12 @@ namespace AnDeTruApp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            int secs = (int)gameTime.TotalGameTime.TotalSeconds;
+            if (secs != nLastPhotoSecond && secs % 5 == 0)
+            {
+                GraphicsDevice.PrepareScreenShot();
+            }
+
             // Must be the first method to be called.
             this.DrawBackground();
             this.DrawGestures();
@@ -115,6 +130,11 @@ namespace AnDeTruApp
             this.FillBox();
 
             base.Draw(gameTime);
+            if (secs != nLastPhotoSecond && secs % 5 == 0)
+            {
+                this.nLastPhotoSecond = secs;
+                GraphicsDevice.SaveScreenshot(); 
+            }
         }
 
         private void FillBox()
@@ -182,6 +202,22 @@ namespace AnDeTruApp
 
             // this line needs to be last of method
             this._camera.Draw();
+        }
+
+        private void SavePhotos()
+        {
+            
+            int PhotosIndex = 1;
+            foreach (RenderTarget2D photo in GamePhotos)
+            {
+                //@"/GamePhotos/" + DateTime.Today.ToString("hh:mm:ss") +
+                Stream st = new FileStream("./photo" + PhotosIndex + ".jpg", FileMode.Create);
+                photo.SaveAsJpeg(st, photo.Width, photo.Height);
+                PhotosIndex++;
+                photo.Dispose();
+            
+                st.Close();
+            } 
         }
 
         private void InitializeBackgroundTexture()
