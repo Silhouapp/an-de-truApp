@@ -46,7 +46,7 @@ namespace AnDeTruApp
         public event EventHandler<GestureEventArgs> GestureCapturedHandler;
         private float[][] arrX;
         private float[][] arrY;
-        private int[] arrGestureTypeCount;
+        private int[][] arrGestureTypeCount;
         private int nFrameCount = 0;
         private int[] nHandGestureCount;
 
@@ -87,7 +87,6 @@ namespace AnDeTruApp
             arrX[1] = new float[60];
             arrY[1] = new float[60];
             nHandGestureCount = new int[2];
-<<<<<<< HEAD
             arrGestureTypeCount = new int[2][];
             arrGestureTypeCount[0] = new int[3];
             arrGestureTypeCount[1] = new int[3];
@@ -96,9 +95,6 @@ namespace AnDeTruApp
             this.gestureCount.Add(v_gesture, 0);
             this.gestureCount.Add(spread_gesture, 0);
 
-=======
-            arrGestureTypeCount = new int[3];
->>>>>>> parent of d19ef64... טיפה יותר טוב
             handler.onNewSample = OnNewSample;
             handler.onModuleProcessedFrame = new PXCMSenseManager.Handler.OnModuleProcessedFrameDelegate(onProcessedFrame);
 
@@ -114,7 +110,6 @@ namespace AnDeTruApp
             //{
             if (handData.QueryHandData(PXCMHandData.AccessOrderType.ACCESS_ORDER_BY_ID, 0, out IHandData) == pxcmStatus.PXCM_STATUS_NO_ERROR)
             {
-<<<<<<< HEAD
                 if (handData != null)
                 {
                     PXCMHandData.JointData jointData;
@@ -131,39 +126,6 @@ namespace AnDeTruApp
             }
 
             if (nFrameCount >= 7)
-=======
-                if (handData.QueryHandData(PXCMHandData.AccessOrderType.ACCESS_ORDER_BY_TIME, i, out IHandData) == pxcmStatus.PXCM_STATUS_NO_ERROR)
-                {
-                    if (handData != null)
-                    {
-                        PXCMHandData.JointData jointData;
-                        IHandData.QueryTrackedJoint((PXCMHandData.JointType)1, out jointData);
-                        nodes[i][1] = jointData;
-                        //Debug.WriteLine(nodes[i][1].positionImage.x.ToString() + " " + nodes[i][1].positionImage.y.ToString() + " " + numOfHands.ToString());
-                        arrX[i][nHandGestureCount[i]] = nodes[i][1].positionImage.x;
-                        arrY[i][nHandGestureCount[i]] = nodes[i][1].positionImage.y;
-                        nHandGestureCount[i]++;
-                    }
-                }
-                PXCMHandData.GestureData GestureData;//D
-                
-                if (handData.IsGestureFired("fist", out GestureData))//D
-                {
-                    arrGestureTypeCount[(int)enmGesture.Fist]++;
-                }
-                else if (handData.IsGestureFired("spreadfingers", out GestureData))//D
-                {
-                    arrGestureTypeCount[(int)enmGesture.SpreadHand]++;
-                }
-                else if (handData.IsGestureFired("v_sign", out GestureData))//D
-                {
-                    arrGestureTypeCount[(int)enmGesture.VShape]++;
-                }
-
-
-            }
-            if (nFrameCount >= 60)
->>>>>>> parent of d19ef64... טיפה יותר טוב
             {
                 inzOutPut();
             }
@@ -171,37 +133,15 @@ namespace AnDeTruApp
 
         private void inzOutPut()
         {
-<<<<<<< HEAD
             Gesture g = calcDominintGesture(0);
             //int nXMedian = (int)calcMedian(arrX[0], nHandGestureCount[0]);
             //int nYMedian = (int)calcMedian(arrY[0], nHandGestureCount[0]);
-=======
-            Gesture g = calcDominintGesture();
-            int nXMedian = (int)calcMedian(arrX[0], nHandGestureCount[0]);
-            int nYMedian = (int)calcMedian(arrY[0], nHandGestureCount[0]);
->>>>>>> parent of d19ef64... טיפה יותר טוב
 
             EventHandler<GestureEventArgs> handler = GestureCapturedHandler;
             if (handler != null && g != null)
             {
                 handler(this, new GestureEventArgs() { Gesture = g, X = this.HandLocation.X, Y = this.HandLocation.Y });
             }
-<<<<<<< HEAD
-=======
-            if(handData.QueryNumberOfHands() == 2)
-            {
-                nXMedian = (int)calcMedian(arrX[1], nHandGestureCount[1]);
-                nYMedian = (int)calcMedian(arrY[1], nHandGestureCount[1]);
-                
-                if (handler != null && g != null)
-                {
-                    handler(this, new GestureEventArgs() { Gesture = g, X = nXMedian, Y = nYMedian });
-                }
-            }
-            arrGestureTypeCount = new int[3];
-            nHandGestureCount = new int[2];
-            nFrameCount = 0;
->>>>>>> parent of d19ef64... טיפה יותר טוב
         }
 
         private float calcMedian(float[] array,int HandGestureCount)
@@ -210,7 +150,6 @@ namespace AnDeTruApp
             return array[HandGestureCount / 2]; ;
         }
 
-<<<<<<< HEAD
 
         private Gesture calcDominintGesture(int ihand)
         {
@@ -219,22 +158,6 @@ namespace AnDeTruApp
             List<KeyValuePair<string, int>> myList = this.gestureCount.ToList();
 
             myList.Sort((first, next) =>
-=======
-        private Gesture calcDominintGesture()
-        {
-            Gesture DominintGesture = null;
-            if((arrGestureTypeCount[(int)enmGesture.Fist] > arrGestureTypeCount[(int)enmGesture.SpreadHand]) 
-                && (arrGestureTypeCount[(int)enmGesture.Fist] > arrGestureTypeCount[(int)enmGesture.VShape]))
-            {
-                DominintGesture = new Rock();
-            }
-            else if((arrGestureTypeCount[(int)enmGesture.SpreadHand] > arrGestureTypeCount[(int)enmGesture.Fist]) 
-                && (arrGestureTypeCount[(int)enmGesture.SpreadHand] > arrGestureTypeCount[(int)enmGesture.VShape]))
-            {
-                DominintGesture = new Paper();
-            }
-            else
->>>>>>> parent of d19ef64... טיפה יותר טוב
             {
                 return first.Value.CompareTo(next.Value);
             });
